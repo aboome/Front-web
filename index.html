@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0"/>
+    <title>桥梁信息监测平台-主页</title>
+    <link rel="stylesheet" href="third/bootstrap-3.5/css/bootstrap.min.css"/>
+    <link href="third/IconFont/iconfont.css" rel="stylesheet">
+    <link href="css/reset.css" rel="stylesheet"/>
+    <link href="css/app.css" rel="stylesheet"/>
+    <link href="css/navbar.css" rel="stylesheet"/>
+    <link href="css/index.css" rel="stylesheet"/>
+</head>
+<body>
+<div class="top-nav">
+    <div class="logo">
+        <a href="#">
+            <img src="images/logo-w.png">
+        </a>
+    </div>
+
+    <!-- 顶部导航开始 -->
+    <div class="menu-body">
+        
+    </div>
+</div>
+<!-- 顶部导航结束 -->
+<div id="map_loading">
+    <img src="third/layer/skin/default/loading-2.gif" />
+</div>
+<div id="yhmap">
+	
+</div>
+
+<div class="table-wrapper">
+    <div class="selector">
+        <form role="form">
+        	
+        	<div class="input-group" id="query-select">
+				<div class="input-group-btn">
+					<button type="button" class="btn btn-default">
+						<span id="showS">桥梁名称 </span>
+					</button>
+				</div><!-- /btn-group -->
+				
+				<select class="form-control" id="searchBridge">
+					<option value="">请选择桥梁</option>
+					<option v-cloak v-for="item of items" data-longItude="{{ item.longItude }}" data-latItude="{{ item.latItude }}" value="{{ item.monitorId }}">{{ item.monitorName }}</option>
+				</select>
+				<span class="input-group-btn">
+					<button class="btn btn-primary index-search" type="button" id="search">
+						<i class="glyphicon glyphicon-search"></i>
+					</button>
+				</span>
+			</div><!-- /input-group -->
+        </form>
+    </div>
+</div>
+
+<div class="bridgeInfo">
+    <div class="bridgeInfoClass bridgeInfo_top">
+        <h3 class="title">桥梁信息</h3>
+        <ul class="clearfix info">
+            <li class="col-xs-4"><span class="info_left">分布</span><span class="info_right" id="countBridge"></span></li>
+            <li class="col-xs-4"><span class="info_left">告警</span><span class="info_right" id="countWarn"></span></li>
+            <li class="col-xs-4"><span class="info_left">统计</span><span class="info_right" id="totalSensor"></span></li>
+        </ul>
+    </div>
+    <div class="bridgeInfoClass bridgeInfo_middle">
+        <ul>
+            <li id="dt-04" data-type="04"><span class="checkType">挠度监测</span><span class="checkStatus"><a href="#" class="sensorStatus"></a></span><span class="sensorType">挠度传感器</span><span class="sensorCount"></span></li>
+            <li id="dt-00" data-type="00"><span class="checkType">环境监测</span><span class="checkStatus"><a href="#" class="sensorStatus"></a></span><span class="sensorType">环境传感器</span><span class="sensorCount"></span></li>
+        </ul>
+    </div>
+    <div class="bridgeInfoClass bridgeInfo_bottom" id="warnInfo">
+        <ul>
+            
+        </ul>
+    </div>
+</div>
+
+<div class="footer text-center">
+    版权所有：桥梁在线监测Copyright &copy;2008- 2016 All Rights Reserved V0.0.1
+</div>
+<!-- js -->
+<script src="third/jquery-2.12.js"></script>
+<script src="third/jquery.cookie.min.js"></script>
+<script src="third/vue.js"></script>
+<script src="third/bootstrap-3.5/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="js/yhjs/yhConstant.js" ></script>
+<script type="text/javascript" src="third/layer/layer.js" ></script>
+<script type="text/javascript" src="js/yhjs/yhLayer.js" ></script>
+<script src="js/yhjs/yhGo.js"></script>
+<script type="text/javascript" src="js/yhjs/yhMenu.js" ></script>
+<script src="js/yhjs/yhPage.js" ></script>
+<script type="text/javascript" src="js/yhjs/yhSelect.js" ></script>
+<script src="js/yhjs/yhMap.js"></script>
+<script src="js/app.js"></script>
+<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=rO4GciXQZVXbmFB8okbWGfx10GCZsYPF"></script>
+<script type="text/javascript" src="http://api.map.baidu.com/library/TextIconOverlay/1.2/src/TextIconOverlay_min.js"></script>
+<script type="text/javascript" src="http://api.map.baidu.com/library/MarkerClusterer/1.2/src/MarkerClusterer_min.js"></script>
+<script>
+
+	$(function(){
+
+        yhMap.init();
+
+		yhMenu.init('', YhHttpConstant.ServiceKey.LIST_MENU_INFO, 1, 0);
+		
+        $("#userId").text($.cookie("userName"));
+        
+        queryBridgeData.monitorLocation = '';
+        queryBridgeData.monitorId = '';
+        
+		queryBridgeByCondition(queryBridgeData, YhHttpConstant.ServiceKey.QUERY_BRIDGE_BY_CONDITION);
+		querySensorByCondition(queryBridgeData, YhHttpConstant.ServiceKey.LIST_SENSOR_BY_CONDITION);
+		warnCount(queryBridgeData, YhHttpConstant.ServiceKey.COUNT_WARN);
+		warnSensor(queryBridgeData, YhHttpConstant.ServiceKey.LIST_WARN_SENSOR);
+		
+		/*yhSelect.init('#searchBridge', YhHttpConstant.yhSelect.bridge_select);*/
+	});
+
+    var queryBridgeData = {
+        monitorLocation: '',
+        monitorId: ''
+    }
+
+    var queryBridgeByCondition = function(queryParam, code) {
+        YhHttp.init(code);
+        YhHttp.send(queryParam, queryBridgeByConditionCallback);
+    };
+
+    var querySensorByCondition = function(queryParam, code){
+        YhHttp.init(code);
+        YhHttp.send(queryParam, querySensorByConditionCallback);
+    };
+	
+	var warnCount = function(queryParam, code){
+		YhHttp.init(code);
+		YhHttp.send(queryParam, warnCountCallback);
+	};
+	var warnCountCallback = function(result){
+		var resultObj = JSON.parse(result);
+		if(result != null && result != ''){
+			var countWarn = resultObj.parameter.count;
+			$('#countWarn').html(countWarn);
+		} else if(resultObj.resultcode != YhHttpConstant.ResultCode.SUCCESS){
+			yhLayer.yhMsg(resultObj.message, 1, 1000);
+		} else {
+			yhLayer.yhMsg(tips.queryMsg, 0, 1000);
+		}
+	};
+	
+	var warnSensor = function(queryParam, code){
+		YhHttp.init(code);
+		YhHttp.send(queryParam, warnSensorCallback);
+	};
+	var warnSensorCallback = function(result){
+		$('#warnInfo ul').html('');
+		var resultObj = JSON.parse(result);
+		if(result != null && result != ''){
+			var d = resultObj.parameter.list;
+			
+			for(var i=0; i<d.length; i++){
+				var li = '<li><span class="warnInfo">'+ d[i].remark +'</span><span class="warnInfoLevel"><i class="l'+ d[i].warnLevel +'-info"></i></span></li>';
+				$('#warnInfo ul').append(li);
+			}
+		
+		} else if(resultObj.resultcode != YhHttpConstant.ResultCode.SUCCESS){
+			yhLayer.yhMsg(resultObj.message, 1, 1000);
+		} else {
+			yhLayer.yhMsg(tips.queryMsg, 0, 1000);
+		}
+	};
+	
+	
+	$('#search').on('click', function(){
+		if (null == $('#searchBridge').val() || $('#searchBridge').val() == '') {
+            yhMap.init();
+            queryBridgeByCondition(queryBridgeData, YhHttpConstant.ServiceKey.QUERY_BRIDGE_BY_CONDITION);
+            querySensorByCondition(queryBridgeData, YhHttpConstant.ServiceKey.LIST_SENSOR_BY_CONDITION);
+            warnCount(queryBridgeData, YhHttpConstant.ServiceKey.COUNT_WARN);
+            warnSensor(queryBridgeData, YhHttpConstant.ServiceKey.LIST_WARN_SENSOR);
+        } else {
+            var longItude = $('#searchBridge option:selected').attr('data-longItude');
+            var latItude = $('#searchBridge option:selected').attr('data-latItude');
+            yhMap.setMapCenter(longItude, latItude);
+        }
+
+	});
+
+    var queryBridgeByConditionCallback = function(result){
+        var resultObj = JSON.parse(result);
+        if(result != null && result != ''){
+            var countBridge = resultObj.parameter.count;
+            $('#countBridge').text(countBridge);
+            var d = resultObj.parameter.list;
+            
+            var vm = new Vue({
+                el: '#searchBridge',
+                data: {
+                    items: d
+                }
+            });
+            
+            yhMap.setPointList(d);
+
+        } else if(resultObj.resultcode != YhHttpConstant.ResultCode.SUCCESS){
+            yhLayer.yhMsg(resultObj.message, 1, 1000);
+        } else {
+            yhLayer.yhMsg(tips.queryMsg, 0, 1000);
+        }
+    };
+
+    var querySensorByConditionCallback = function(result){
+        var resultObj = JSON.parse(result);
+        if(result != null && result != ''){
+            var d = resultObj.parameter.list;
+
+            if(d == '' || d == null){
+                $('.sensorStatus').html('正常');
+                $('.sensorCount').html('0');
+                return 0;
+            }
+
+            var total = 0;
+            for(var i=0; i<d.length; i++){
+                var di = d[i].moniotrType;
+                var st = '';
+
+                if(di == '00'){
+                    $('#dt-00 .sensorCount').html(d[i].count);
+					$('#dt-00 .sensorStatus').html(d[i].status);
+                } else if(di == '04'){
+                	$('#dt-04 .sensorCount').html(d[i].count);
+					$('#dt-04 .sensorStatus').html(d[i].status);
+                }
+                total = Number(d[i].count) + total;
+            }
+            $('#totalSensor').html(total);
+            
+            yhPage.formatter();
+
+        } else if(resultObj.resultcode != YhHttpConstant.ResultCode.SUCCESS){
+            yhLayer.yhMsg(resultObj.message, 1, 1000);
+        } else {
+            yhLayer.yhMsg(tips.queryMsg, 0, 1000);
+        }
+    };
+    
+    $("body").keydown(function() {
+	    if (event.keyCode == "13") {//keyCode=13是回车键
+	        $('#search').trigger('click');
+	    }
+	});
+</script>
+</body>
+</html>

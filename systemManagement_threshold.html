@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0"/>
+    <title>桥梁信息监测平台-阈值配置管理</title>
+    <link rel="stylesheet" href="third/bootstrap-3.5/css/bootstrap.min.css"/>
+    <link href="third/IconFont/iconfont.css" rel="stylesheet">
+    <!--<link href="third/layui/css/layui.css" rel="stylesheet">-->
+    <link href="css/reset.css" rel="stylesheet"/>
+    <link href="css/app.css" rel="stylesheet"/>
+    <link href="css/page.css" rel="stylesheet"/>
+    <link href="css/navbar.css" rel="stylesheet"/>
+    <link href="css/systemManage.css" rel="stylesheet"/>
+</head>
+<body>
+<div class="top-nav">
+    <div class="logo">
+        <a href="#">
+            <img src="images/logo-w.png">
+        </a>
+    </div>
+
+    <!-- 顶部导航开始 -->
+    <div class="menu-body">
+
+    </div>
+</div>
+<!-- 顶部导航结束 -->
+
+<!-- 左侧导航栏开始 -->
+<div class="left-menu-opr" id="left-menu-opr-js">
+    <a class="left-menu-btn"></a>
+</div>
+<div class="left-menu" id="sysLeftMenu">
+    
+</div>
+<!-- 左侧导航栏结束 -->
+
+<!-- 右侧内容开始 -->
+<div class="right-container" id="right-container">
+    <div class="table-wrapper" >
+        <div class="table-wrapper-head">
+            <h2 class="table-title">阈值配置管理</h2>
+        </div>
+        <div class="selector">
+            <form class="form-inline" role="form" id="queryForm" onsubmit="return false">
+                <div class="form-group">
+                    <label class="sr-only" for="sensorName">传感器名称</label>
+                    <input type="text" class="form-control" id="sensorName" name="sensorName" placeholder="请输入传感器名称" value="">
+                </div>
+                <div class="form-group">
+                    <label class="sr-only" for="bridgeName">桥梁名称</label>
+                    <select class="form-control" id="bridgeName">
+                        <option value="">选择桥梁名称</option>
+                        <option v-cloak v-for="item of items" value="{{ item.value }} ">{{ item.value }}</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <button type="button" class="btn btn-black" id="search">查询</button>
+                    <button type="button" class="btn btn-black" id="add">新增</button>
+                </div>
+            </form>
+        </div>
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>传感器名称</th>
+                <th>传感器标识</th>
+                <th>采集类型</th>
+                <th>阈值上限</th>
+                <th>阈值下限</th>
+                <th>位置</th>
+                <th>桥梁名称</th>
+                <th>编辑时间</th>
+                <th>操作</th>
+            </tr>
+            </thead>
+            <tbody id="yh-grid">
+
+            </tbody>
+        </table>
+        <div id="pagination-container" class="m-pagination"></div>
+
+   </div>
+</div>
+<!-- 新增弹出层 -->
+<div id="addLayer" class="yh-layer none">
+    <form class="form-horizontal" id="addForm">
+        <div class="form-group">
+            <label for="add-sensorName" class="col-xs-4 control-label">传感器名称</label>
+            <div class="col-xs-8">
+                <select class="form-control yh-addInput" name="sensorName" data-addKey="sensorName" id="add-sensorName">
+                    <option value="">请选择传感器名称</option>
+                    <option v-cloak v-for="item of items" value="{{ item.value }}">{{ item.value }}</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group none add-sensorNumber">
+            <label for="add-sensorNumber" class="col-xs-4 control-label">传感器标识</label>
+            <div class="col-xs-8">
+                <input type="text" class="form-control yh-addInput" data-addKey="sensorNumber" id="add-sensorNumber" readonly="readonly"/>
+            </div>
+        </div>
+        <div class="form-group none add-monitorName">
+            <label for="add-monitorName" class="col-xs-4 control-label">桥梁名称</label>
+            <div class="col-xs-8">
+                <input type="text" class="form-control yh-addInput" data-addKey="monitorName" id="add-monitorName" readonly="readonly"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="add-collectionModel" class="col-xs-4 control-label">采集类型</label>
+            <div class="col-xs-8">
+                <select class="form-control yh-addInput" name="collectionModel" data-addKey="collectionModel" id="add-collectionModel">
+
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="add-top3" class="col-xs-4 control-label">预警上限</label>
+            <div class="col-xs-8">
+                <input type="text" class="form-control yh-addInput" data-addKey="top3" id="add-top3" placeholder="请输入预警上限"  name="top3"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="add-least3" class="col-xs-4 control-label">预警下限</label>
+            <div class="col-xs-8">
+                <input type="text" class="form-control yh-addInput" data-addKey="least3" id="add-least3" placeholder="请输入预警下限" name="least3" />
+            </div>
+        </div>
+    </form>
+</div>
+<!--修改阈值配置-->
+<div id="modifyLayer" class="yh-layer none">
+    <form class="form-horizontal" id="modifyForm">
+        <div class="form-group none">
+            <input type="text" class="form-control yh-input" data-key="id" id="m-id" value="" />
+        </div>
+        <div class="form-group">
+            <label for="m-sensorName" class="col-xs-4 control-label">传感器名称</label>
+            <div class="col-xs-8">
+            	<input type="text" class="form-control yh-input" data-Key="sensorName" id="m-sensorName" name="sensorName" readonly="readonly" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="m-sensorNumber" class="col-xs-4 control-label">传感器标识</label>
+            <div class="col-xs-8">
+            	<input type="text" class="form-control yh-input" data-Key="sensorNumber" id="m-sensorNumber" name="sensorNumber" readonly="readonly" />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="m-monitorName" class="col-xs-4 control-label">桥梁名称</label>
+            <div class="col-xs-8">
+            	<input type="text" class="form-control yh-input" data-Key="monitorName" id="m-monitorName" name="monitorName" readonly="readonly" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="m-collectionModel" class="col-xs-4 control-label">采集类型</label>
+            <div class="col-xs-8">
+            	<input type="text" class="form-control yh-input" data-Key="collectionModel" id="m-collectionModel" name="collectionModel" readonly="readonly" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="m-top3" class="col-xs-4 control-label">预警上限</label>
+            <div class="col-xs-8">
+                <input type="text" class="form-control yh-input" data-Key="top3" id="m-top3" placeholder="请输入预警上限" name="top3" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="m-least3" class="col-xs-4 control-label">预警下限</label>
+            <div class="col-xs-8">
+                <input type="text" class="form-control yh-input" data-Key="least3" id="m-least3" placeholder="请输入预警下限" name="least3"/>
+            </div>
+        </div>
+    </form>
+</div>
+<!-- 删除弹出层-->
+<div id="deleteLayer" class="yh-layer none">
+    <p class="delete-text">您确定要删除该条数据吗？</p>
+</div>
+<!-- 右侧内容结束 -->
+<!-- 版权区 -->
+<div class="">
+
+</div>
+<script type="text/template" id="yh-grid-template">
+    <tr></tr>
+    {@each list as it,index}
+    <tr>
+        <td>${ it.sensorName }</td>
+        <td>${ it.sensorNumber }</td>
+        <td class="dataType">${ it.collectionModel }</td>
+        <td>${ it.top3 }</td>
+        <td>${ it.least3 }</td>
+        <td>${ it.location }</td>
+        <td>${ it.monitorName }</td>
+        <td>${ (new Date(it.lastUpdateTime)).Format("yyyy-MM-dd hh:mm:ss") }</td>
+        <td><a href="javascript:;" class="td-a modify"
+               data-id = '${ it.id }' data-monitorName = '${ it.monitorName }'
+               data-sensorName ='${ it.sensorName }'
+               data-sensorNumber = '${ it.sensorNumber }'  data-collectionModel = '${ it.collectionModel }'
+               data-top3 = '${ it.top3 }'  data-least3 = '${ it.least3 }'>修改
+        </a>
+            <a href="javascript:;" class="td-a delete"
+               data-id = '${ it.id }'>删除
+            </a>
+        </td>
+    </tr>
+    {@/each}
+</script>
+<script src="third/jquery-2.12.js"></script>
+<script src="third/jquery.cookie.min.js"></script>
+<script src="third/jquery.validate.js"></script>
+<script src="js/yhjs/yhValidate.js"></script>
+<script src="third/juicer-min.js"></script>
+<script src="third/vue.js"></script>
+<script src="third/pagination.min.js"></script>
+<!--<script src="third/layui/layui.js"></script>-->
+<script src="third/bootstrap-3.5/js/bootstrap.min.js"></script>
+<script src="third/layer/layer.js"></script>
+<script src="third/dateFormat.js" ></script>
+<script src="js/yhjs/yhConstant.js" ></script>
+<script src="js/yhjs/yhGo.js" ></script>
+<script type="text/javascript" src="js/yhjs/yhMenu.js" ></script>
+<script src="js/yhjs/yhPage.js" ></script>
+<script type="text/javascript" src="js/yhjs/yhSelect.js" ></script>
+<script src="js/yhjs/yhLayer.js" ></script>
+<script src="js/app.js"></script>
+<script>
+    /*初始化查询*/
+    $(function(){
+    	yhMenu.init('', YhHttpConstant.ServiceKey.LIST_MENU_INFO, 6, 8);
+        /*初始化下拉框*/
+        yhSelect.init('#bridgeName', YhHttpConstant.yhSelect.bridge_select);
+
+        yhSelect.init('#add-sensorName', YhHttpConstant.yhSelect.sensor_select);
+
+
+
+        queryData.page.currentPage = 1;
+        queryData.page.pageSize = 10;
+        
+        queryData.sensorName = '';
+        queryData.collectionModel = '';
+        queryData.monitorName='';
+
+        yhPage.queryTable(queryData, YhHttpConstant.ServiceKey.LIST_WARNING_VALUE_SET_BY_PAGE);
+    });
+
+    var queryData = {
+        page: {
+            currentPage: '',
+            pageSize: ''
+        },
+        sensorName: '',
+        collectionModel:'',
+        monitorName: ''
+    };
+
+    var deleteInfo = {
+        warningvalueId:''
+    };
+
+    /*条件查询*/
+    $('#search').on('click',function(){
+        if($('#queryForm').valid()){
+            queryData.page.currentPage = 1;
+            queryData.page.pageSize = 10;
+            queryData.collectionModel = '';
+            queryData.sensorName = $('.selector #sensorName').val();
+            queryData.monitorName = $('.selector #bridgeName').val();
+
+            yhPage.queryTable(queryData, YhHttpConstant.ServiceKey.LIST_WARNING_VALUE_SET_BY_PAGE);
+        }
+    });
+
+    /*新增弹出层*/
+    $('#add-sensorName').on('change',function(){
+    	
+    	$('#add-top3').val('');
+    	$('#add-least3').val('');
+    	
+        var findSensorById = {
+            sensorName : null
+        };
+
+        findSensorById.sensorName = $("#add-sensorName option:selected").text();
+
+        YhHttp.init(YhHttpConstant.ServiceKey.FIND_SENSOR_BY_ID);
+        YhHttp.send(findSensorById, function(result){
+            var resultObj = JSON.parse(result);
+            var param = resultObj.parameter;
+            $("#add-sensorNumber").val(param.sensorNum);
+            $(".add-sensorNumber").show();
+            $("#add-monitorName").val(param.monitorName);
+            $(".add-monitorName").show();
+
+            $("#add-collectionModel").html("");
+            $("#add-collectionModel").append('<option value="">选择采集类型</option>');
+            var dataTypeList = param.sensorTypeList;
+
+            for (var i=0;i<dataTypeList.length;i++) {
+                $("#add-collectionModel").append('<option value="'+dataTypeList[i]+'">'+yhEnum.dataType[dataTypeList[i]].name+'</option>');
+            }
+
+        });
+    });
+
+    /*新增弹出层*/
+    $('#add').on('click',function(){
+        $(".add-sensorNumber").hide();
+        $(".add-monitorName").hide();
+        $('#add-sensorName option:selected').attr('selected', false);
+        $("#add-collectionModel").html("");
+        $("#add-collectionModel").append('<option value="">选择采集类型</option>');
+        yhPage.addLayer('阈值配置',YhHttpConstant.ServiceKey.ADD_WARNING_VALUE_SET,null);
+    });
+
+   /* 修改弹出层*/
+    $('#yh-grid').on('click','.modify',function(){
+        /*先清空*/
+        $('input').val('');
+        $('select option:first').prop("selected", true);
+       	
+       	
+      	$('#m-sensorName').val($(this).attr('data-sensorName'));
+		$('#m-sensorNumber').val($(this).attr('data-sensorNumber'));
+		$('#m-monitorName').val($(this).attr('data-monitorName'));
+		$('#m-collectionModel').val($(this).attr('data-collectionModel'));
+        $('#m-id').val($(this).attr('data-id'));
+        $('#m-top3').val($(this).attr('data-top3'));
+        $('#m-least3').val($(this).attr('data-least3'));
+
+        yhPage.modifyLayer('阈值配置',YhHttpConstant.ServiceKey.UPDATE_WARNING_VALUE_SET,null);
+
+    });
+
+
+    /*删除弹出层*/
+    $('#yh-grid').on('click','.delete',function(){
+        deleteInfo.warningvalueId = $(this).attr('data-id');
+        yhPage.deleteLayer('阈值配置',deleteInfo,YhHttpConstant.ServiceKey.DELETE_WARNING_VALUE_SET);
+
+    });
+    var pageEventHandler = function (pageSizes, pageNum) {
+
+        queryData.sensorName = $('#sensorName').val();
+        queryData.collectionModel = '';
+        queryData.monitorName = $('#bridgeName option:selected').text();
+
+        if (pageSizes == null || pageSizes == "") {
+            queryData.page.pageSize = 10;
+        } else {
+            queryData.page.pageSize = pageSizes;
+        }
+
+        if (pageNum == null || pageNum == "") {
+            queryData.page.currentPage = 1;
+        } else {
+            queryData.page.currentPage = pageNum;
+        }
+
+        yhPage.queryTable(queryData, YhHttpConstant.ServiceKey.LIST_WARNING_VALUE_SET_BY_PAGE);
+    };
+</script>
+</body>
+</html>

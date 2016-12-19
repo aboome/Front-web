@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0"/>
+    <title>桥梁信息监测平台-数据统计</title>
+    <link rel="stylesheet" href="third/IconFont/demo.css">
+    <link rel="stylesheet" href="third/IconFont/iconfont.css">
+    <link rel="stylesheet" href="third/bootstrap-3.5/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="css/app.css"/>
+    <link rel="stylesheet" href="css/headerFooterStyle.css"/>
+    <link rel="stylesheet" href="css/dataStatistics.css"/>
+</head>
+<body>
+<div class="top-nav">
+    <div class="logo">
+        <a href="#">
+            <img src="images/logo-w.png">
+        </a>
+    </div>
+
+    <!-- 顶部导航开始 -->
+    <div class="menu-body">
+
+    </div>
+</div>
+<!-- 顶部导航结束 -->
+<!-- 左侧边栏开始 -->
+<div class="left-menu-opr" id="left-menu-opr-js">
+    <a class="left-menu-btn"></a>
+</div>
+<div class="bridgeClassify left-menu" id="jsYhBridge">
+
+</div>
+<!-- 左侧边栏结束 -->
+<!-- 右侧内容开始 -->
+<div class="right-container" id="right-container">
+    <div class="warper-right" id="warper-right">
+        <div class="bridgeTitle">
+            <p><span>我的桥梁：</span>&nbsp;&nbsp;<span id="myBridge"></span></p>
+        </div>
+        <div class="wraper-photo">
+            <ul class="nav nav-tabs dataType">
+                <li class="active"><a href="#" data-type="1" class="statistics-a">历史数据</a></li>
+                <li><a href="dataStatistics_monthlyReport.html" data-type="2" class="statistics-a">月报报表</a></li>
+                <!--<li><a href="dataStatistics_compare.html" data-type="3" class="statistics-a">数据对比</a></li>-->
+            </ul>
+            <div class="nav-tabs-content" id="dataStatistics-1">
+                <div class="">
+                    <form class="form-inline myForm" role="form">
+                        <div class="form-group">
+                            <select class="form-control" id="select-sensorNum">
+                                <option value="">选择传感器标识</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <select class="form-control" id="select-dataType">
+                                <option value="">选择传感器数据类型</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <input class="Wdate form-control" id="startTime0" type="text" onClick="WdatePicker()"
+                                   placeholder="请选择开始时间">
+                        </div>
+                        <div class="form-group">
+                            <input class="Wdate form-control" id="endTime0" type="text" onClick="WdatePicker()"
+                                   placeholder="请选择结束时间">
+                        </div>
+                        <div class="form-group">
+                            <button type="button" class="btn btn-black mybtn " id="search">查询</button>
+                        </div>
+                    </form>
+                </div>
+                <p class="allPosition"><span>历史数据统计：</span>&nbsp;&gt;&nbsp;<span id="sensorDataType"></span></p>
+
+
+                <div class="chart-container">
+                    <div id="container" style="min-width:400px;height:400px">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 右侧内容结束 -->
+
+</body>
+<script src="third/jquery-2.12.js"></script>
+<script src="third/vue.js"></script>
+<script src="third/jquery.cookie.min.js"></script>
+<script src="third/bootstrap-3.5/js/bootstrap.min.js"></script>
+<script src="third/Highcharts-4.2.6/js/highcharts.js"></script>
+<script src="third/Highcharts-4.2.6/js/highcharts-more.js"></script>
+<script src="third/Highcharts-4.2.6/js/modules/exporting.js"></script>
+<script src="third/Highcharts-4.2.6/js/modules/data.js"></script>
+<script type="text/javascript" src="third/My97DatePicker/WdatePicker.js"></script>
+<script src="js/app.js"></script>
+<script src="third/layer/layer.js"></script>
+<script src="third/dateFormat.js"></script>
+<script src="js/yhjs/yhConstant.js"></script>
+<script src="js/yhjs/yhGo.js"></script>
+<script type="text/javascript" src="js/yhjs/yhMenu.js"></script>
+<script src="js/yhjs/yhPage.js"></script>
+<script src="js/yhjs/yhLayer.js"></script>
+<script src="js/yhjs/yhSelect.js"></script>
+<script type="text/javascript" src="js/yhjs/yhMonitor.js"></script>
+<script type="text/javascript">
+
+    var e = window.event;
+
+    var queryDataTypeBySensorNo = {
+        sensorNumber: null
+    };
+
+    var listSensorNoByMonitor = {
+        monitorId: null
+    };
+
+    $(function () {
+        yhMenu.init('', YhHttpConstant.ServiceKey.LIST_MENU_INFO, 4, 0);
+        /* 初始化左侧桥梁*/
+        yhMonitor.init(initRightContainer);
+    });
+
+    var initRightContainer = function (monitorId) {
+		var activeMonitor = $('#jsYhBridge .active .span-bridge').text();
+        $('#myBridge').html(activeMonitor);
+		
+		var myDate = new Date();
+		var today = myDate.getFullYear() + '-' + (myDate.getMonth()+1) + '-' + myDate.getDate();
+		$('#startTime0').val(today);
+		$('#endTime0').val(today);
+    };
+
+    $('#select-sensorNum').on('change', function () {
+
+        $('#select-dataType').empty();
+        $('#select-dataType').append('<option value="">选择传感器数据类型</option>');
+
+        queryDataTypeBySensorNo.sensorNumber = $("#select-sensorNum").find("option:selected").text();
+
+        YhHttp.init(YhHttpConstant.ServiceKey.QUERY_DATA_TYPE_BY_SENSOR_NO);
+        YhHttp.send(queryDataTypeBySensorNo, queryDataTypeBySensorNoCallBack);
+
+    });
+
+    var queryDataTypeBySensorNoCallBack = function (result) {
+
+        var resultObj = JSON.parse(result);
+        if (result != null && result != '') {
+
+            var data = resultObj.parameter.list;
+
+            for (var i=0;i<data.length;i++){
+                $('#select-dataType').append('<option value="'+data[i].dataType+'">'+data[i].dataName+'</option>');
+            }
+
+        } else if (resultObj.resultcode != YhHttpConstant.ResultCode.SUCCESS) {
+            yhLayer.yhMsg(resultObj.message, 1, 1000);
+        } else {
+            yhLayer.yhMsg(tips.queryMsg, 0, 1000);
+        }
+    };
+
+
+    var queryData = {
+        sensorNo: '',
+        dataType: '',
+        startTime: '',
+        endTime: ''
+    };
+
+    var yData = [];
+    var xData = [];
+
+    var queryChartCallBack = function (result) {
+        var resultObj = JSON.parse(result);
+        if (resultObj != null && resultObj != "") {
+            if (resultObj.resultcode == '0000') {
+                if (resultObj.parameter.list != null && resultObj.parameter.list != "") {
+                    var d = resultObj.parameter.list;
+                    var dt = d[0].dataType;
+                    var sensorName = d[0].sensorName;
+                    for (var i = 0; i < d.length; i++) {
+
+                        yData.push(d[i].peakValue);
+                        /*处理日期????*/
+                        var time = d[i].createTime;
+                        xData.push(new Date(time).Format("yyyy-MM-dd hh:mm:ss"));
+                    }
+                    
+                    var name = yhEnum.dataType[dt].name;
+                    var unit = yhEnum.dataType[dt].unit;
+                    var nu = '';
+                    
+                    if(unit == ''){
+                    	nu = name + '( 无 )';
+                    } else {
+                    	nu = name + '( ' + unit + ' )';
+                    }
+                    
+                    
+                    
+                    yh_high_charts('历史数据', sensorName, nu, 110, -10, unit, name, yData, xData);
+                }
+            } else {
+                layer.msg(result.parameter.message, {icon: 2, time: 1000});
+            }
+
+        } else {
+            layer.msg('连接失败...请稍后再试...', {icon: 2, time: 1000});
+        }
+    };
+
+    /*条件查询*/
+    $('#search').on('click', function () {
+        queryData.sensorNo = $('#select-sensorNum').val();
+        queryData.dataType = $('#select-dataType').val();
+        queryData.startTime = $('#startTime0').val();
+        queryData.endTime = $('#endTime0').val();
+        /* 清空图表数据*/
+        yData = [];
+        xData = [];
+        $('#sensorDataType').text(queryData.dataType);
+        YhHttp.init(YhHttpConstant.ServiceKey.LIST_DAY_REPORTS);
+        YhHttp.send(queryData, queryChartCallBack);
+    });
+
+    $("#right-container").on('click', '.statistics-a', function (e) {
+        $("#right-container ul>li").removeClass("active");
+        $(e.target).parents("li").addClass("active");
+        var i = $(e.target).attr("data-type");
+        $(".nav-tabs-content").css("display", 'none');
+
+        $("#dataStatistics-" + i).css("display", 'block');
+    });
+
+    var yh_high_charts = function (title, subtitle, unitTip, warnTop, warnBot, unit, seriesName, yData, xData) {
+        /*var topic = seriesName.substring(0, seriesName.length - 4);
+         var text = '实时数据(' + seriesName + ')';
+         var style = {"color": "#333333", "font-weight": "normal"};
+         if (yhCookieUtil.isPointWarn(topic, seriesName)) {
+         text = '实时数据(' + seriesName + ')正在预警中！';
+         style = {"color": "#C12E2A", "font-weight": "bold"};
+         }*/
+        Highcharts.setOptions({
+            global: {
+                useUTC: false
+            }
+        });
+        $('#container').highcharts({
+            chart: {
+                type: 'spline',
+                marginRight: 10
+            },
+            title: {
+                text: title,
+                x: -20,
+                style: {"color": "#333333", "font-weight": "normal"}
+            },
+            subtitle: {
+                text: subtitle,
+                x: -20,
+                style: {
+                    "font-family": "微软雅黑"
+                }
+            },
+            xAxis: {
+                categories: xData
+            },
+            yAxis: {
+                title: {
+                    text: unitTip
+                },
+                plotLines: [{
+                    value: warnTop,
+                    width: 2,
+                    color: '#FAC84C',
+                    zIndex: 1
+                }, {
+                    value: warnBot,
+                    width: 2,
+                    color: '#FAC84C',
+                    zIndex: 1
+                }],
+
+            },
+            credits: {
+                enabled: false // 禁用版权信息
+            },
+            tooltip: {
+                valueSuffix: unit,
+                formatter: function () {
+                    return '<b>' + this.series.name + '</b><br/>' +
+                        xData + '<br/>' +
+                        Highcharts.numberFormat(this.y, 2) + unit;
+                }
+            },
+            legend: {
+                enabled: false
+            },
+            exporting: {
+                enabled: false
+            },
+            series: [{
+                name: seriesName,
+                data: yData
+            }
+            ]
+        });
+    };
+
+    /* 左侧导航栏 */
+    $('#jsYhBridge').on('click', '.bridge-a', function (e) {
+        $('#jsYhBridge .bridge-a').parents('li').removeClass('active');
+        $('.bridge-a').removeAttr('style');
+        $(e.target).parents('li').addClass('active');
+
+        $('#myBridge').html($('#jsYhBridge .active .span-bridge').text());
+
+        // 初始化右边title
+        if (null == getTopic()) {
+            $("#04").click();
+        } else {
+            $("#" + getTopic()).click();
+        }
+
+        $('#select-dataType').empty();
+        $('#select-dataType').append('<option value="">选择传感器数据类型</option>');
+
+        listSensorNoByMonitor.monitorId = $('#jsYhBridge .active .bridge-a').attr('id');;
+
+        /*查询监测物绑定传感器列表*/
+        YhHttp.init(YhHttpConstant.ServiceKey.LIST_SENSOR_NO_BY_MONITOR);
+        YhHttp.send(listSensorNoByMonitor, listSensorNoByMonitorCallBack);
+
+        /*initSensorList(dataType);*/
+
+    });
+
+    var listSensorNoByMonitorCallBack = function (result) {
+
+        var resultObj = JSON.parse(result);
+        if (result != null && result != '') {
+
+            $('#select-sensorNum').empty();
+            $('#select-sensorNum').append('<option value="">选择传感器标识</option>');
+
+            var data = resultObj.parameter.list;
+
+            for (var i=0;i<data.length;i++){
+                $('#select-sensorNum').append('<option value="'+data[i].sensorNumber+'">'+data[i].sensorNumber+'</option>');
+            }
+        } else if (resultObj.resultcode != YhHttpConstant.ResultCode.SUCCESS) {
+            yhLayer.yhMsg(resultObj.message, 1, 1000);
+        } else {
+            yhLayer.yhMsg(tips.queryMsg, 0, 1000);
+        }
+
+    }
+
+
+</script>
+</html>

@@ -1,0 +1,215 @@
+body, html {
+    /*width: 100%;*/
+    height: 100%;
+    margin: 0;
+    font-family: "微软雅黑";
+}
+
+#yhmap {
+    width: 100%;
+    height: 90%;
+    min-width: 1200px;
+}
+
+p {
+    margin-left: 5px;
+    font-size: 14px;
+}
+.dropdown-menu{
+    float: right;
+}
+.dropdown-menu li a{
+	background-color: transparent;
+}
+.btn{
+	padding: 8px 12px;;
+}
+.form-control{
+	height: 38px !important;
+}
+.index-search{
+	padding: 8px 20px;
+	color: #fff;
+}
+
+.table-wrapper{
+    position: absolute;
+    top: 50px;
+    left: 20px;
+    margin-right: 320px;
+    border: 0;
+}
+.table-wrapper .selector{
+    width: 425px;
+    border-radius: 4px;
+}
+.table-wrapper .map-form.form-group{
+    width: 120px;
+    margin: 0px 0px 10px 0px;
+}
+
+
+.table-wrapper .map-form.form-group .form-control{
+    font-size: 13px;
+    padding: 0px 0px 0px 5px;
+    height: 25px;
+}
+.table-wrapper .form-group.map-form .btn-black{
+    height: 25px;
+    width: 100%;
+    padding: 0px;
+    font-size: 13px;
+}
+
+.bridgeInfo{
+    width: 250px;
+    font-size: 12px;
+    position: absolute;
+    top: 50px;
+    right: 0;
+    font-family: "微软雅黑";
+}
+.bridgeInfoClass{
+    background: #3b3b3b;
+    color: #fff;
+    margin-bottom: 1px;
+}
+
+.bridgeInfo .bridgeInfo_top .title{
+    text-align: center;
+    font-size: 15px;
+    padding: 5px 0;
+    border-bottom: 1px solid #fff;
+}
+.bridgeInfo .bridgeInfo_top .info li{
+    float: left;
+    text-align: center;
+    padding: 0;
+    border-right: 1px solid #fff;
+}
+.bridgeInfo .bridgeInfo_top .info li:last-child{
+    border-right: 0;
+}
+.bridgeInfo .bridgeInfo_top .info li span{
+    display: inline-block;
+    padding: 5px 5px;
+}
+.bridgeInfo .bridgeInfo_middle li{
+    height: 30px;
+    line-height: 30px;
+    border-bottom: 1px solid #fff;
+}
+.bridgeInfo .bridgeInfo_middle li:last-child{
+    border-bottom: 0px;
+}
+.bridgeInfo .bridgeInfo_middle li span{
+    display: inline-block;
+    width: 25%;
+    text-align: center;
+}
+.bridgeInfo .bridgeInfo_middle li span.checkStatus{
+    font-size: 18px;
+    font-weight: bold;
+    color: #1EA4DA;
+}
+.bridgeInfo .bridgeInfo_middle li span.sensorCount{
+    font-size: 18px;
+}
+.bridgeInfo .bridgeInfo_bottom li{
+    height: 30px;
+    line-height: 30px;
+    border-bottom: 1px solid #fff;
+    padding: 0 5px;
+}
+.bridgeInfo .bridgeInfo_bottom li:last-child{
+    border-bottom: 0px;
+}
+.bridgeInfo .bridgeInfo_bottom li span{
+    display: inline-block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.bridgeInfo .bridgeInfo_bottom li .warnInfo{
+    width: 180px;
+}
+.bridgeInfo .bridgeInfo_bottom li .warnInfoLevel{
+    float: right;
+}
+.bridgeInfo .bridgeInfo_bottom li .warnInfoLevel i{
+    width: 12px;
+    height: 12px;
+    display: inline-block;
+}
+.l3-info{
+    background-color: #F04544;
+}
+.l2-info{
+    background-color: #EEA343;
+}
+.l1-info{
+    background-color: #F7E680;
+}
+
+.footer{
+	padding: 10px 0;
+}
+
+.none{
+	display: none !important;
+}
+
+.BMap_CityListCtrl{
+	top: 106px !important;
+	left: 20px !important;	
+}
+.BMap_CityListCtrl .ui_city_change_inner{
+	border-radius: 4px;
+	height: 35px !important;
+	line-height: 35px !important;
+}
+.citylist_popup_main .city_content_top{
+	padding: 15px 10px 30px 10px !important;
+}
+.ui_city_change_top .ui_city_change_inner i, 
+.ui_city_change_bottom .ui_city_change_inner i{
+	height: 15px !important;
+	top: 10px !important
+}
+
+
+#map_loading{
+	width: 100%;
+	text-align: center;
+	position: absolute;
+	top: 40%;
+}
+
+.bTitle{
+	margin:0 0 5px 0;
+	padding:0.2em 0;
+	text-align: center;
+	font-size: 18px;
+	font-weight: bold;
+}
+.bDialog{
+	height: 30px;
+	line-height: 30px; 
+	font-size: 16px;
+	border-bottom: 1px solid #ddd;
+}
+.bDialog .bDialogA{
+	color: #000000;
+}
+.bDialog .bDialogA:hover{
+	font-size: 17px;
+}
+.bDialog .bSpan{
+	display: inline-block; 
+	width: 50%; 
+	text-align: center;
+}
+.bDialog .bSpan .sensorStatus{
+	font-weight: bold;
+	color: #23527c;
+}

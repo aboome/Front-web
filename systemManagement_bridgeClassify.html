@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0"/>
+    <title>桥梁信息监测平台-</title>
+    <link rel="stylesheet" href="third/bootstrap-3.5/css/bootstrap.min.css"/>
+    <link href="third/IconFont/iconfont.css" rel="stylesheet">
+    <!-- <link href="third/layui/css/layui.css" rel="stylesheet">-->
+    <link href="css/reset.css" rel="stylesheet"/>
+    <link href="css/app.css" rel="stylesheet"/>
+    <link href="css/page.css" rel="stylesheet"/>
+    <link href="css/navbar.css" rel="stylesheet"/>
+    <link href="css/systemManage.css" rel="stylesheet"/>
+</head>
+<body>
+
+<!-- 右侧内容开始 -->
+<!--<div class="right-container" id="right-container">-->
+<div class="table-wrapper">
+    <div class="selector">
+        <form class="form-inline" role="form" id="queryForm" onsubmit="return false">
+            <div class="form-group">
+                <label class="sr-only" for="groupName">组名</label>
+                <input type="text" class="form-control" id="groupName" name="groupName" placeholder="请输入桥梁组名" value="">
+            </div>
+            <div class="form-group">
+                <button type="button" class="btn btn-black" id="search">查询</button>
+                <button type="button" class="btn btn-black" id="add">新增</button>
+
+            </div>
+        </form>
+    </div>
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>桥梁组名</th>
+            <!--<th>分组类型</th>-->
+            <th>分组描述</th>
+            <!-- <th>地区</th>-->
+            <th>创建日期</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody id="yh-grid">
+
+        </tbody>
+    </table>
+    <div id="pagination-container" class="m-pagination"></div>
+    <!--新增桥梁分组-->
+    <div id="addLayer" class="yh-layer none">
+        <form class="form-horizontal" id="addForm">
+            <div class="form-group">
+                <label for="add-groupName" class="col-xs-4 control-label">桥梁组名</label>
+                <div class="col-xs-8">
+                    <input type="text" class="form-control yh-addInput" name="groupName" data-addKey="groupName" id="add-groupName"
+                           name="groupName" placeholder="输入桥梁分组名" value=""/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="add-remark" class="col-xs-4 control-label">分组描述</label>
+                <div class="col-xs-8">
+                    <input type="text" class="form-control yh-addInput" name="remark" data-addKey="remark" id="add-remark"
+                           name="remark" placeholder="输入分组描述" value=""/>
+                </div>
+            </div>
+        </form>
+    </div>
+
+
+    <!--修改桥梁分组-->
+    <div id="modifyLayer" class="yh-layer none">
+        <form class="form-horizontal" id="modifyForm">
+            <div class="form-group none">
+                <input type="text" class="form-control yh-input" data-key="id" id="m-id" value=""/>
+            </div>
+            <div class="form-group">
+                <label for="m-groupName" class="col-xs-4 control-label">桥梁组名</label>
+                <div class="col-xs-8">
+                    <input type="text" class="form-control yh-input" data-key="groupName" id="m-groupName"
+                           name="groupName"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="m-remark" class="col-xs-4 control-label">分组描述</label>
+                <div class="col-xs-8">
+                    <input type="text" class="form-control yh-input" data-key="remark" id="m-remark" name="remark"/>
+                </div>
+            </div>
+        </form>
+    </div>
+    <!--删除桥梁分组-->
+    <div id="deleteLayer" class="yh-layer none">
+        <p class="delete-text">您确定要删除该条数据吗？</p>
+    </div>
+</div>
+<!--桥梁分组详情-->
+<div id="showDetails" class="yh-layer none">
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>桥梁名称</th>
+            <th>桥梁位置</th>
+            <th>桥梁描述</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr></tr>
+        <tr v-cloak v-for="item of groupItems">
+            <td>{{ item.monitorName }}</td>
+            <td>{{ item.monitorLocation }}</td>
+            <td>{{ item.remark }}</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<!--</div>-->
+<!-- 右侧内容结束 -->
+<!-- 版权区 -->
+<div class="">
+
+</div>
+<script type="text/template" id="yh-grid-template">
+    <tr></tr>
+    {@each list as it,index}
+    <tr>
+        <td>${ it.groupName }</td>
+        <!--<td>{{ item.groupType }}</td>-->
+        <td>${ it.remark }</td>
+        <!--<td>{{ item.orgName }}</td>-->
+        <td>${ (new Date(it.createTime)).Format("yyyy-MM-dd hh:mm:ss") }</td>
+        <td>
+            <!--<a href="javascript:;" class="td-a detail"-->
+               <!--data-groupName="${ it.groupName }"-->
+               <!--data-id="${ it.id }">详情-->
+            <!--</a>-->
+            <a href="javascript:;" class="td-a modify"
+               data-id="${ it.id }"
+               data-groupName="${ it.groupName }"
+               data-remark="${ it.remark }">修改
+            </a>
+            <a href="javascript:;" class="td-a delete"
+               data-id="${ it.id }">删除
+            </a>
+        </td>
+    </tr>
+    {@/each}
+</script>
+<script src="third/jquery-2.12.js"></script>
+<script src="third/jquery.cookie.min.js"></script>
+<script src="third/jquery.validate.js"></script>
+<script src="js/yhjs/yhValidate.js"></script>
+<script src="third/juicer-min.js"></script>
+<script src="third/vue.js"></script>
+<script src="third/pagination.min.js"></script>
+<!--<script src="third/layui/layui.js"></script>-->
+<script src="third/bootstrap-3.5/js/bootstrap.min.js"></script>
+<script src="third/layer/layer.js"></script>
+<script src="third/dateFormat.js"></script>
+<script src="js/yhjs/yhConstant.js"></script>
+<script src="js/yhjs/yhGo.js"></script>
+<script type="text/javascript" src="js/yhjs/yhMenu.js"></script>
+<script src="js/yhjs/yhPage.js"></script>
+<script src="js/yhjs/yhLayer.js"></script>
+<script src="js/app.js"></script>
+<script>
+    var queryData = {
+        page: {
+            currentPage: '',
+            pageSize: ''
+        },
+        groupName: ''
+    };
+    var deleteData = {};
+
+    /*加载查询分组信息*/
+    $(function () {
+        queryData.page.currentPage = 1;
+        queryData.page.pageSize = 10;
+        queryData.groupName = '';
+
+        yhPage.queryTable(queryData, YhHttpConstant.ServiceKey.QUERY_BRIDGE_GROUP);
+    });
+    /*条件查询*/
+    $("#search").on('click', function () {
+        if ($('#queryForm').valid()) {
+            queryData.page.currentPage = 1;
+            queryData.page.pageSize = 10;
+            queryData.groupName = $("#groupName").val();
+            yhPage.queryTable(queryData, YhHttpConstant.ServiceKey.QUERY_BRIDGE_GROUP);
+        }
+
+    });
+    /*查看桥梁分组详情*/
+    $("#yh-grid").on('click', '.detail', function () {
+        queryData.page.currentPage = 1;
+        queryData.page.pageSize = 10;
+        queryData.groupName = $(this).attr("data-groupName");
+        /*重新加载tbody*/
+        $("#showDetails table>tbody").html("<tr></tr> <tr v-cloak v-for='item of groupItems'> <td>{{ item.monitorName }}</td> <td>{{ item.monitorLocation }}</td> <td>{{ item.remark }}</td></tr>")
+        YhHttp.init(YhHttpConstant.ServiceKey.QUERY_GROUP_BRIDGE_DETAIL);
+        YhHttp.send(queryData, function (result) {
+            yhLayer.yhLoading();
+            var resultObj = JSON.parse(result);
+            if (result != null && result != '') {
+                if (resultObj.parameter != null && resultObj.parameter != 'undefined') {
+                    var menuData = resultObj.parameter.list;
+
+                    var bridgeTable = new Vue({
+                        el: "#showDetails",
+                        data: {
+                            groupItems: menuData
+                        }
+                    });
+
+                } else {
+                    $("#showDetails table>tbody").html("分组下没有桥梁")
+                }
+                layer.open({
+                    type: 1,
+                    title: '桥梁分组详情',
+                    area: ['450px', '50%'],
+                    minHeight: '450px',
+                    shadeClose: false,
+                    content: $('#showDetails'),
+                    btn: false
+                });
+                yhLayer.yhCloseLoading();
+
+            } else if (resultObj.resultcode != YhHttpConstant.ResultCode.SUCCESS) {
+                yhLayer.yhMsg(resultObj.message, 1, 1000);
+            } else {
+                yhLayer.yhMsg(tips.queryMsg, 0, 1000);
+            }
+        });
+
+    });
+
+
+    /*新增桥梁分组*/
+    $("#add").on('click', function () {
+        $('#add-groupName').val('');
+        $('#add-remark').val('');
+        yhPage.addLayer('桥梁分组', YhHttpConstant.ServiceKey.ADD_BRIDGE_GROUP, null);
+    });
+    /* 修改桥梁分组名*/
+    $("#yh-grid").on('click', '.modify', function () {
+        $("#m-groupName").val($(this).attr("data-groupName"));
+        $("#m-remark").val($(this).attr("data-remark"));
+        $("#m-id").val($(this).attr("data-id"));
+        yhPage.modifyLayer('桥梁分组', YhHttpConstant.ServiceKey.UPDATE_BRIDGE_CLASSIFY_BY_PAGE, null);
+    });
+
+    /*删除桥梁分组*/
+    $("#yh-grid").on('click', '.delete', function () {
+        deleteData.groupId = $(this).attr("data-id");
+        yhPage.deleteLayer('桥梁分组', deleteData, YhHttpConstant.ServiceKey.DELETE_BRIDGE_GROUP);
+    });
+
+
+    /*桥梁树切换*/
+    $("#bridgeTree").on('click', '.chapter', function () {
+        $("li.chapter").removeClass("active");
+        $(this).addClass("active");
+    });
+
+    var pageEventHandler = function (pageSizes, pageNum) {
+
+        queryData.groupName = $('#groupName').val();
+
+        if (pageSizes == null || pageSizes == "") {
+            queryData.page.pageSize = 10;
+        } else {
+            queryData.page.pageSize = pageSizes;
+        }
+
+        if (pageNum == null || pageNum == "") {
+            queryData.page.currentPage = 1;
+        } else {
+            queryData.page.currentPage = pageNum;
+        }
+
+        yhPage.queryTable(queryData, YhHttpConstant.ServiceKey.QUERY_BRIDGE_GROUP);
+    };
+</script>
+</body>
+</html>

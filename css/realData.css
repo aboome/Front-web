@@ -1,0 +1,153 @@
+div.query{
+    padding: 10px;
+}
+button.mybtn,select.form-control{
+    float: right;
+    margin-right: 40px;
+}
+
+
+div.card-1{
+    border: 1px solid #d4d4d4;
+    background-color: #f8f8f8;
+    margin-right: 2px;
+    text-align: center;
+    padding: 5px 0px;
+    height: 80px;
+}
+div.card-1 p{
+    padding:0px 0px  2px 0px;
+}
+div.card-1 i.iconfont{
+    color: black;
+}
+div.card-1 a{
+    display: block;
+padding: 0px;
+}
+div.card-1 .card-img{
+    height: 20px;
+/*border: 1px solid black;*/
+    margin-top: -7px;
+}
+div.card-1 a.active .card-img{
+    background: url("../images/realData_card_1.png") no-repeat;
+    background-size: 100%;
+}
+div.card-1 img{
+    width: 100%;
+
+}
+
+div.card-1 .active,div.card-1 .active i.iconfont{
+    color: #03cbcb;
+}
+
+div.card-1 a{
+    color: #000;
+    height: 80px;
+}
+
+div.card-1 a:hover,div.card-1 a:hover i.iconfont{
+    color: #03cbcb;
+}
+
+div.monitorType{
+    padding: 5px 0px;
+}
+div.monitorType  .myNav a{
+    color: black;
+    padding: 15px;
+}
+div.monitorType  .myNav a:hover{
+    background-color: white;
+    border:none ;
+    color:#82b6ec;
+}
+div.monitorType  .myNav a.active{
+    color:#82b6ec;
+    border-bottom: 4px solid #82b6ec;
+}
+div.monitorType  .nav-tabs.myNav {
+    border-bottom: 2px solid #d9edfe;
+}
+
+
+.sensor{
+    padding: 10px 0px ;
+}
+.sensor .allPosition,.sensor .current-val{
+    font-size: 16px;
+}
+.sensor .sensorPosition{
+    border: 1px solid #D9D9D9;
+    margin-top: -8px;
+    padding: 5px 10px;
+    height: 30px;
+    overflow: hidden;
+}
+.sensor .sensorPosition .sensorPosition-title{
+    font-size: 14px;
+    float: left;
+}
+.sensor .sensorPosition .sensorPosition-sel{
+    /*margin: 5px;*/
+
+}
+.sensor .sensorPosition .sensorPosition-sel p{
+    min-width: 100px;
+    text-align: left;
+    height: 22px;
+    line-height: 22px;
+}
+.sensor-sel label{
+    font-weight: normal;
+    cursor: pointer;
+}
+
+.sensor .control-filterBtn p,.sensor .control-filterBtn button{
+    display: inline-block;
+}
+button.filterBtn{
+    float: right;
+    bottom: 0px;
+    margin-right: 0px !important;
+    background-color:#edebeb;
+    color: #000;
+    border-radius: 0px;
+}
+
+
+.sensor .current-val{
+    padding: 10px 0px;
+}
+.sensor .current-val-table{
+    margin-top: 10px;
+    border: 1px solid #D9D9D9;
+    margin-bottom: 0;
+    text-align: center;
+}
+
+
+.sensor-sel{
+	margin: 0 !important;
+}
+.currentValue{
+    margin: 10px 0px 10px 0px;
+    padding: 10px 0px;
+    /*border: 1px solid black;*/
+    font-family: "Microsoft YaHei";
+    font-size: 18px;
+}
+
+.sensorTime{
+    border:1px solid #eeeeee;
+    text-align: center;
+    padding: 10px 0px;
+
+}
+.sensorValue{
+    border:1px solid #eeeeee;
+    text-align: center;
+    padding: 10px 0px;
+}

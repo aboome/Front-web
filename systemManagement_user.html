@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0"/>
+    <title>桥梁信息监测平台-用户管理</title>
+    <link rel="stylesheet" href="third/bootstrap-3.5/css/bootstrap.min.css"/>
+    <link href="third/IconFont/iconfont.css" rel="stylesheet">
+    <!--<link href="third/layui/css/layui.css" rel="stylesheet">-->
+    <link href="css/reset.css" rel="stylesheet"/>
+    <link href="css/app.css" rel="stylesheet"/>
+    <link href="css/page.css" rel="stylesheet"/>
+    <link href="css/navbar.css" rel="stylesheet"/>
+    <link href="css/systemManage.css" rel="stylesheet"/>
+</head>
+<body>
+<div class="top-nav">
+    <div class="logo">
+        <a href="#">
+            <img src="images/logo-w.png">
+        </a>
+    </div>
+    <!-- 顶部导航开始 -->
+    <div class="menu-body">
+
+    </div>
+</div>
+<!-- 顶部导航结束 -->
+
+<!-- 左侧导航栏开始 -->
+<div class="left-menu-opr" id="left-menu-opr-js">
+    <a class="left-menu-btn"></a>
+</div>
+<div class="left-menu" id="sysLeftMenu">
+
+</div>
+<!-- 左侧导航栏结束 -->
+
+<!-- 右侧内容开始 -->
+<div class="right-container" id="right-container">
+    <div class="table-wrapper">
+        <div class="table-wrapper-head">
+            <h2 class="table-title">用户管理</h2>
+            <!--<a href="javascript:;" class="btn title-btn" id="custom">自定义列</a>-->
+        </div>
+        <div class="selector">
+            <form class="form-inline" role="form" id="queryForm" onsubmit="return false">
+                <div class="form-group">
+                    <label class="sr-only" for="userAccount">用户名</label>
+                    <input type="text" class="form-control" id="userAccount" name="userAccount" placeholder="请输入用户名"
+                           value="">
+                </div>
+
+                <div class="form-group">
+                    <button type="button" class="btn btn-black" id="search">查询</button>
+                    <button type="button" class="btn btn-black" id="add">新增</button>
+                </div>
+            </form>
+        </div>
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>用户名</th>
+                <th>会员类型</th>
+                <th>地区</th>
+                <th>管理单位</th>
+                <th>创建时间</th>
+                <th>操作</th>
+            </tr>
+            </thead>
+            <tbody id="yh-grid">
+
+            </tbody>
+        </table>
+        <div id="pagination-container" class="m-pagination"></div>
+    </div>
+
+    <!-- 详情 -->
+    <div id="showDetails" class="yh-show-layer none">
+        <ul class="bridge">
+            <li class="row">
+                <p class="col-xs-4">用户名：</p>
+                <p class="col-xs-8 show-username"></p>
+            </li>
+            <li class="row">
+                <p class="col-xs-4">地区：</p>
+                <p class="col-xs-8 show-area"></p>
+            </li>
+            <li class="row">
+                <p class="col-xs-4">管理单位：</p>
+                <p class="col-xs-8 show-orgName"></p>
+            </li>
+        </ul>
+    </div>
+    <!-- 新增弹出层 -->
+    <div id="addLayer" class="yh-layer none">
+        <form class="form-horizontal" id="addForm">
+            <div class="form-group">
+                <label for="add-userName" class="col-xs-4 control-label">用户名</label>
+                <div class="col-xs-8">
+                    <input type="text" class="form-control yh-addInput" data-addKey="userName" id="add-userName"
+                           placeholder="请输入用户名" name="userName"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="add-area" class="col-xs-4 control-label">地区</label>
+                <div class="col-xs-8">
+                    <select class="form-control yh-addInput" name="area" data-addKey="area" id="add-area">
+                        <option value="">请选择地区</option>
+                        <option v-cloak v-for="item of items" value="{{ item.value }}">{{ item.value }}</option>
+                    </select>
+                </div>
+            </div>
+        </form>
+    </div>
+    <!-- 修改弹出层 -->
+    <div id="modifyLayer" class="yh-layer none">
+        <form class="form-horizontal" id="modifyForm">
+            <div class="form-group">
+                <label for="m-userName" class="col-xs-4 control-label">用户名</label>
+                <div class="col-xs-8">
+                    <input type="text" class="form-control yh-input" data-key="userName" id="m-userName" name="userName"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="area" class="col-xs-4 control-label">地区</label>
+                <div class="col-xs-8">
+                    <select class="form-control yh-input" data-key="area" id="area">
+                        <option v-cloak v-for="item of items" value="{{ item.value }}">{{ item.value }}</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group none">
+                <label for="memberType" class="col-xs-4 control-label">会员类型</label>
+                <div class="col-xs-8">
+                    <input type="text" class="form-control yh-input" data-key="memberType" id="memberType" value=""/>
+                </div>
+            </div>
+            <div class="form-group none">
+                <label for="id" class="col-xs-4 control-label">ID</label>
+                <div class="col-xs-8">
+                    <input type="text" class="form-control yh-input" data-key="id" id="id" value=""/>
+                </div>
+            </div>
+        </form>
+    </div>
+    <!--绑定桥梁-->
+    <div id="bindBridgeLayer" class="yh-layer row none">
+        <div v-cloak v-for="item of items" class="col-xs-4">
+            <label class="checkbox-inline">
+                <input type="checkbox" class="bindBridge" name="bindBridge" id="bridge-{{ item.id }}" data-id="{{ item.id }}"
+                       value="{{ item.monitorName }}"> {{ item.monitorName }}
+            </label>
+        </div>
+    </div>
+
+    <!--绑定角色-->
+    <div id="bindRoleLayer" class="yh-layer row none">
+    	<select id="bindRole" class="form-control">
+    		<option v-cloak v-for="item of items" value="{{ item.id }}" id="role-{{ item.id }}">{{ item.roleName }}</option>
+    	</select>
+    </div>
+    <!-- 删除弹出层 -->
+    <div id="deleteLayer" class="yh-layer none">
+        <p class="delete-text">您确定要删除该条数据吗？</p>
+    </div>
+</div>
+<!-- 右侧内容结束 -->
+<!-- 版权区 -->
+<div class="">
+
+</div>
+<script type="text/template" id="yh-grid-template">
+    <tr></tr>
+    {@each list as it,index}
+    <tr>
+        <td>${ it.userName }</td>
+        <td class="memberType">${ it.memberType }</td>
+        <td>${ it.area }</td>
+        <td>${ it.orgName }</td>
+        <td>${ (new Date(it.createTime)).Format("yyyy-MM-dd hh:mm:ss")}</td>
+        <td>
+            <a href="javascript:;"
+               data-id="${ it.id }"
+               data-username="${ it.userName }"
+               data-userPassword="${ it.passWord }"
+               data-area="${ it.area }"
+               data-orgName="${ it.orgName }"
+               class="td-a details">查看详情</a>
+            {@if it.memberType=='01'}
+            <a href="javascript:;"
+               data-id="${ it.id }"
+               data-index="${ index }"
+               data-userName="${ it.userName }"
+               data-area="${ it.area }"
+               data-orgName="${ it.orgName }"
+               data-memberType="${ it.memberType }"
+               class="td-a modify">修改</a>
+            <a href="javascript:;" data-id="${ it.id }" data-memberType="${ it.memberType }" class="td-a delete">删除</a>
+            <a href="javascript:;" class="td-a reset"
+               data-id="${ it.id }" data-memberType="${ it.memberType }">密码重置
+            </a>
+            <a href="javascript:;"
+               class="td-a bindBridge"
+               data-orgName="${ it.orgName }"
+               data-id="${ it.id }">绑定桥梁</a>
+            <a href="javascript:;"
+               class="td-a bindRole"
+               data-id="${ it.id }">绑定角色</a>
+            {@else}
+
+            {@/if}
+
+        </td>
+    </tr>
+    {@/each}
+</script>
+<script src="third/jquery-2.12.js"></script>
+<script src="third/jquery.cookie.min.js"></script>
+<script src="third/jquery.validate.js"></script>
+<script src="js/yhjs/yhValidate.js"></script>
+<script src="third/juicer-min.js"></script>
+<script src="third/vue.js"></script>
+<script src="third/pagination.min.js"></script>
+<!--<script src="third/layui/layui.js"></script>-->
+<script src="third/bootstrap-3.5/js/bootstrap.min.js"></script>
+<script src="third/layer/layer.js"></script>
+<script src="third/dateFormat.js"></script>
+<script src="js/yhjs/yhConstant.js"></script>
+<script src="js/yhjs/yhGo.js"></script>
+<script type="text/javascript" src="js/yhjs/yhMenu.js"></script>
+<script type="text/javascript" src="js/yhjs/yhSelect.js"></script>
+<script src="js/yhjs/yhPage.js"></script>
+<script src="js/yhjs/yhLayer.js"></script>
+<script src="js/app.js"></script>
+<script>
+    var queryData = {
+        page: {
+            currentPage: '',
+            pageSize: ''
+        },
+        area: '',
+        orgName: '',
+        userName: ''
+    };
+    var deleteData = {
+        managerId: '',
+        memberType: ''
+    };
+    var bridgeData = {
+        id: ''
+    };
+    var roleData = {
+        id: ''
+    };
+
+    var resetPwd = {
+        id: '',
+        memberType: ''
+    };
+    var bindBridgeData = {
+        managerId: '',
+        id: '',
+        monitorId: []
+    };
+    var listManageBridgeData = {
+    	id: ''
+    };
+    var listManageRoleData = {
+    	id: ''
+    };
+
+    $(function () {
+        yhMenu.init('', YhHttpConstant.ServiceKey.LIST_MENU_INFO, 6, 10);
+ 		yhSelect.init('#area', YhHttpConstant.yhSelect.area_select);
+        queryData.page.currentPage = 1;
+        queryData.page.pageSize = 10;
+        queryData.area = '';
+        queryData.orgName = '';
+        queryData.userName = '';
+
+        yhPage.queryTable(queryData, YhHttpConstant.ServiceKey.QUERY_MANAGER_INFO_BY_PAGE);
+    });
+
+    /*条件查询*/
+    $('#search').on('click', function () {
+        if ($('#queryForm').valid()) {
+            queryData.page.currentPage = 1;
+            queryData.page.pageSize = 10;
+            queryData.area = '';
+            queryData.orgName = '';
+
+            queryData.userName = $('#userAccount').val();
+
+            yhPage.queryTable(queryData, YhHttpConstant.ServiceKey.QUERY_MANAGER_INFO_BY_PAGE);
+        }
+    });
+    $('#add').on('click', function () {
+    	$('#add-userName').val('');
+    	$('#add-area option:selected').attr('selected', false);
+        yhSelect.init('#add-area', YhHttpConstant.yhSelect.area_select);
+        yhPage.addLayer('用户', YhHttpConstant.ServiceKey.ADD_MANAGER_INFO, null);
+    });
+    $('#yh-grid').on('click', '.modify', function () {
+
+        $('#id').val($(this).attr('data-id'));
+        $('#memberType').val($(this).attr('data-memberType'));
+        $('#index').val($(this).attr('data-index'));
+        $('#m-userName').val($(this).attr('data-userName'));
+
+        var dataArea = $(this).attr('data-area');
+        var dataOrgName = $(this).attr('data-orgName');
+        slectedText('#area', dataArea);
+        slectedText('#orgName', dataOrgName);
+
+        yhPage.modifyLayer('用户', YhHttpConstant.ServiceKey.UPDATE_MANAGER_INFO, null);
+    });
+    $('#yh-grid').on('click', '.delete', function () {
+        deleteData.managerId = $(this).attr('data-id');
+        deleteData.memberType = $(this).attr('data-memberType');
+
+        yhPage.deleteLayer('用户', deleteData, YhHttpConstant.ServiceKey.DELETE_MANAGER_INFO);
+    });
+    $('#yh-grid').on('click', '.details', function () {
+        $('.show-username').text($(this).attr('data-username'));
+        $('.show-area').text($(this).attr('data-area'));
+        $('.show-userPassword').text($(this).attr('data-userPassword'));
+        $('.show-orgName').text($(this).attr('data-orgName'));
+        $("#bridge>p.col-xs-8").html("<span v-cloak v-for='item of bridgeItems'>{{ item.monitorName }} </span>");
+        $("#role>p.col-xs-8").html("<span v-cloak v-for='item of roleItems'>{{ item.roleName }} </span>");
+
+        yhPage.detailLayer('用户');
+
+    });
+
+    /*密码重置*/
+    $("#yh-grid").on('click', '.reset', function () {
+        resetPwd.id = $(this).attr("data-id");
+        resetPwd.memberType = $(this).attr("data-memberType");
+        YhHttp.init(YhHttpConstant.ServiceKey.RESET_MANAGER_PASSWORD);
+        YhHttp.send(resetPwd, updateCallback);
+    });
+
+    var listBridge = {
+        managerId: ''
+    };
+    /*绑定桥梁*/
+    $('#yh-grid').on('click', '.bindBridge', function () {
+       	listManageBridgeData.id = $(this).attr('data-id');
+        bridgeData.id = $(this).attr('data-id');
+        /*查询所有桥梁*/
+        listBridge.managerId = $(this).attr('data-id');
+        YhHttp.init(YhHttpConstant.ServiceKey.LIST_BRIDGE_INFO);
+        YhHttp.send(listBridge, function(result){
+        	var resultObj = JSON.parse(result);
+        	if(result != null && result != ''){
+        		var d = resultObj.parameter.list;
+        		var vm = new Vue({
+        			el: '#bindBridgeLayer',
+        			data: {
+                        items: d
+                    }
+        		});
+        		
+        		/*查询已绑定的桥梁*/
+		       	YhHttp.init(YhHttpConstant.ServiceKey.LIST_MANAGER_BRIDGE);
+		       	YhHttp.send(listManageBridgeData, function(result){
+		       		var resultObj = JSON.parse(result);
+		       		if(result != null && result != ''){
+		        		var d = resultObj.parameter.list;
+		        		for(var i=0; i<d.length; i++){
+		        			$('#bridge-' + d[i].id).attr('checked', true);
+		        		}
+		        	} else if(resultObj.resultcode != YhHttpConstant.ResultCode.SUCCESS){
+						yhLayer.yhMsg(resultObj.message, 2, 1000);
+					} else {
+				        yhLayer.yhMsg(tips.deleteMsg, 0 ,1000);
+					}
+		       	});
+        		
+        		
+        	} else if(resultObj.resultcode != YhHttpConstant.ResultCode.SUCCESS){
+				yhLayer.yhMsg(resultObj.message, 2, 1000);
+			} else {
+		        yhLayer.yhMsg(tips.deleteMsg, 0 ,1000);
+			}
+        });
+        
+        layer.open({
+            type: 1,
+            title: '绑定桥梁',
+            area: ['520px', '320px'],
+            shadeClose: false,
+            content: $('#bindBridgeLayer'),
+            btn: ['确定', '取消'],
+            yes: function (index, layero) {
+            	yhLayer.yhLoading();
+                bindBridgeData.managerId = listBridge.managerId;
+                bindBridgeData.id = '';
+                $('input[name="bindBridge"]:checked').each(function () {
+                    bindBridgeData.monitorId.push($(this).attr('data-id'));
+                });
+
+				YhHttp.init(YhHttpConstant.ServiceKey.BIND_MANAGER_MONITOR);
+                YhHttp.send(bindBridgeData, bindBridgeCallback);
+                yhLayer.yhCloseLoading();
+                layer.close(index);
+            }
+        });
+
+    });
+    var listRole = {
+        managerId: '',
+        roleName: '',
+        page: {
+            currentPage: 1,
+            pageSize: 100
+        }
+    };
+    var bindRoleData = {
+        managerId: '',
+        id: '',
+        roleIds: []
+    };
+
+    /*绑定角色*/
+    $('#yh-grid').on('click', '.bindRole', function () {
+        /*查询已绑定的角色*/
+       	listManageRoleData.id = $(this).attr('data-id');
+        roleData.userId = $(this).attr('data-id');
+        /*查询所有角色*/
+        bindRoleData.managerId = $(this).attr('data-id');
+        bindRoleData.id = '';
+        
+        listRole.managerId = $(this).attr('data-id');
+        
+        YhHttp.init(YhHttpConstant.ServiceKey.QUERY_ROLE_INFO);
+        YhHttp.send(listRole, function(result){
+        	var resultObj = JSON.parse(result);
+        	if(result != null && result != ''){
+        		var d = resultObj.parameter.list;
+        		
+        		var vm = new Vue({
+        			el: '#bindRole',
+        			data: {
+        				items: d
+        			}
+        		});
+        		
+        		/*查询已绑定的角色*/
+		       	YhHttp.init(YhHttpConstant.ServiceKey.LIST_MANAGER_ROLE);
+		       	YhHttp.send(listManageRoleData, function(result){
+		       		var resultObj = JSON.parse(result);
+		       		if(result != null && result != ''){
+		        		var d = resultObj.parameter.list;
+		        		for(var i=0; i<d.length; i++){
+		        			$('#role-' + d[i].id).attr('selected', true);
+		        		}
+		        	} else if(resultObj.resultcode != YhHttpConstant.ResultCode.SUCCESS){
+						yhLayer.yhMsg(resultObj.message, 2, 1000);
+					} else {
+				        yhLayer.yhMsg(tips.deleteMsg, 0 ,1000);
+					}
+		       	});
+        		
+        	} else if(resultObj.resultcode != YhHttpConstant.ResultCode.SUCCESS){
+        		yhLayer.yhMsg(resultObj.message, 1, 1000);
+        	} else {
+        		yhLayer.yhMsg(tips.queryMsg, 0, 1000);
+        	}
+        });
+
+        layer.open({
+            type: 1,
+            title: '绑定角色',
+            area: ['320px', '200px'],
+            shadeClose: false,
+            content: $('#bindRoleLayer'),
+            btn: ['确定', '取消'],
+            yes: function (index, layero) {
+				
+				bindRoleData.roleIds.push($('#bindRole').val());
+
+				YhHttp.init(YhHttpConstant.ServiceKey.BIND_MANAGER_ROLE);
+                YhHttp.send(bindRoleData, bindRoleCallback);
+                layer.close(index);
+            }
+        });
+    });
+
+    var pageEventHandler = function (pageSizes, pageNum) {
+
+        queryData.area = '';
+        queryData.orgName = '';
+        queryData.userName = $('#userAccount').val();
+
+        if (pageSizes == null || pageSizes == "") {
+            queryData.page.pageSize = 10;
+        } else {
+            queryData.page.pageSize = pageSizes;
+        }
+
+        if (pageNum == null || pageNum == "") {
+            queryData.page.currentPage = 1;
+        } else {
+            queryData.page.currentPage = pageNum;
+        }
+
+        yhPage.queryTable(queryData, YhHttpConstant.ServiceKey.QUERY_MANAGER_INFO_BY_PAGE);
+    };
+
+    var bindBridgeCallback = function (result) {
+        var resultObj = JSON.parse(result);
+        if (result != null && result != '') {
+            var d = resultObj.parameter;
+            yhLayer.yhMsg(d.message, 1, 2000);
+
+        } else if (resultObj.resultcode != YhHttpConstant.ResultCode.SUCCESS) {
+            yhLayer.yhMsg(resultObj.message, 2, 1000);
+        } else {
+            yhLayer.yhMsg(tips.queryMsg, 0, 1000);
+        }
+    };
+    
+    var bindRoleCallback = function (result) {
+        var resultObj = JSON.parse(result);
+        if (result != null && result != '') {
+            var d = resultObj.parameter;
+            yhLayer.yhMsg(d.message, 1, 2000);
+
+        } else if (resultObj.resultcode != YhHttpConstant.ResultCode.SUCCESS) {
+            yhLayer.yhMsg(resultObj.message, 2, 1000);
+        } else {
+            yhLayer.yhMsg(tips.queryMsg, 0, 1000);
+        }
+    };
+
+</script>
+</body>
+</html>

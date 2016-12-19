@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0"/>
+    <title>桥梁信息监测平台-桥梁结构</title>
+    <link rel="stylesheet" href="third/IconFont/demo.css">
+    <link rel="stylesheet" href="third/IconFont/iconfont.css">
+    <link rel="stylesheet" href="third/bootstrap-3.5/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="css/app.css"/>
+    <link rel="stylesheet" href="css/headerFooterStyle.css"/>
+    <link rel="stylesheet" href="css/bridgeStruture.css"/>
+</head>
+
+<body>
+<div class="top-nav">
+    <div class="logo">
+        <a href="#">
+            <img src="images/logo-w.png">
+        </a>
+    </div>
+
+    <!-- 顶部导航开始 -->
+    <div class="menu-body">
+
+    </div>
+</div>
+<!-- 顶部导航结束 -->
+<!-- 左侧边栏开始 -->
+<div class="left-menu-opr" id="left-menu-opr-js">
+    <a class="left-menu-btn"></a>
+</div>
+<div class="bridgeClassify left-menu" id="jsYhBridge">
+
+</div>
+<!-- 左侧边栏结束 -->
+<!-- 右侧内容开始 -->
+<div class="right-container" id="right-container">
+    <div class="warper-right" id="warper-right">
+        <div class="bridgeTitle">
+            <p><span>我的桥梁：</span>&nbsp;&nbsp;<span id="myBridge"></span></p>
+        </div>
+        <div class="labelCardWrap row">
+            <div class="labelCard col-xs-3">
+                <div class="card normalStatusBg " id="dt-04" data-type="04">
+                    <p><span>挠度监测</span><span class="con-size-20 status">正常</span></p>
+                    <p class="control-padding"><img src="images/bridge_four.png"></p>
+                    <p><span>传感器数量</span><span class="con-size-18 sensorCount">0</span></p>
+                </div>
+            </div>
+            <div class="labelCard col-xs-3">
+                <div class="card normalStatusBg" id="dt-00" data-type="00">
+                    <p><span>环境监测</span><span class="con-size-20 status">正常</span></p>
+                    <p class="control-padding"><img src="images/bridge_four.png"></p>
+                    <p><span>传感器数量</span><span class="con-size-18 sensorCount">0</span></p>
+                </div>
+            </div>
+            <!--<div class="labelCard col-xs-3">
+                <div class="card normalStatusBg" id="dt-02" data-type="02">
+                    <p><span>振动监测</span><span class="con-size-20 status">正常</span></p>
+                    <p class="control-padding"><img src="images/bridge_four.png"></p>
+                    <p><span>传感器数量</span><span class="con-size-18 sensorCount">0</span></p>
+                </div>
+            </div>
+            <div class="labelCard col-xs-3">
+                <div class="card normalStatusBg" id="dt-03" data-type="03">
+                    <p><span>环境监测</span><span class="con-size-20 status">正常</span></p>
+                    <p class="control-padding"><img src="images/bridge_four.png"></p>
+                    <p><span>传感器数量</span><span class="con-size-18 sensorCount">0</span></p>
+                </div>
+            </div>-->
+        </div>
+        <div class="wraper-photo">
+            <ul class="nav nav-tabs">
+                <li class="active">
+                    <a href="javascript:;" class="bridgeStructure-a" data-device="1" data-type="04" id="nd_monitor_04">挠度监测点布置图</a>
+                </li>
+                <li>
+                    <a href="javascript:;" class="bridgeStructure-a" data-device="2" data-type="00" id="nd_monitor_00">环境监测点布置图</a>
+                </li>
+                <!--<li>
+                    <a href="javascript:;" class="bridgeStructure-a" data-device="3" data-type="02">加速度计监测点布置图</a>
+                </li>
+                <li>
+                    <a href="javascript:;" class="bridgeStructure-a" data-device="4" data-type="03">温度计监测点布置图</a>
+                </li>-->
+            </ul>
+
+            <div class="picWrap">
+                <div class="structurePic" id="frontView" data-view="00">
+                    <p>正视图</p>
+                    <div class="viewPic">
+
+                    </div>
+                    <div class="point" id="frontPoint"></div>
+                </div>
+                <div class="structurePic" id="sideView" data-view="01">
+                    <p>侧视图</p>
+                    <div class="viewPic">
+
+                    </div>
+                    <div class="point" id="sidePoint"></div>
+                </div>
+                <div class="structurePic" id="verticalView" data-view="02">
+                    <p>俯视图</p>
+                    <div class="viewPic">
+
+                    </div>
+                    <div class="point" id="verticalPoint"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+<!-- 右侧内容结束 -->
+
+</body>
+<script src="third/jquery-2.12.js"></script>
+<script src="third/jquery.cookie.min.js" type="text/javascript"></script>
+<script src="third/vue.js"></script>
+<script src="third/bootstrap-3.5/js/bootstrap.min.js"></script>
+<script src="third/layer/layer.js"></script>
+<script src="js/yhjs/yhConstant.js"></script>
+<script src="js/yhjs/yhGo.js"></script>
+<script type="text/javascript" src="js/yhjs/yhMenu.js"></script>
+<script src="js/yhjs/yhPage.js"></script>
+<script src="js/yhjs/yhLayer.js"></script>
+<script src="js/yhjs/yhMonitor.js"></script>
+<script src="js/app.js"></script>
+<script type="text/javascript">
+
+    var e = window.event;
+    $(function () {
+        yhMenu.init('', YhHttpConstant.ServiceKey.LIST_MENU_INFO, 2, 0);
+        yhMonitor.init(initRightContainer);
+        
+        push_point();
+        set_point_color_switch();
+    });
+
+    var timer = null;
+    var timer0 = null;
+    var queryAndCountSensor = {
+        monitorId: ''
+    };
+    var queryDrawingData = {
+        monitorId: '',
+        monitorType: '',
+        viewType: ''
+    };
+
+    var initRightContainer = function (monitorId) {
+        queryAndCountSensor.monitorId = $('#jsYhBridge .active a').attr('id');
+
+        querySensorByCondition(queryAndCountSensor, YhHttpConstant.ServiceKey.LIST_SENSOR_BY_CONDITION);
+
+        var monitor_type = getTopic();
+
+        if (null == monitor_type) {
+            /* 查图 */
+            queryDrawingData.monitorId = $('#jsYhBridge .active a').attr('id');
+            queryDrawingData.monitorType = $('.wraper-photo .active a').attr('data-type');
+            YhHttp.init(YhHttpConstant.ServiceKey.QUERY_DRAWING_BY_BRIDGE);
+            YhHttp.send(queryDrawingData, queryDrawingCallback);
+            
+            var activeMonitor = $('#jsYhBridge .active .span-bridge').text();
+        	$('#myBridge').html(activeMonitor);
+        } else {
+            $("#nd_monitor_" + monitor_type).click();
+        }
+    };
+
+    var queryPointData = {
+        drawingId: '',
+        monitorType: ''
+    };
+
+    /* tab切换*/
+    $('#right-container').on('click', '.bridgeStructure-a', function (e) {
+    	
+    	$('.popover').empty();   	    	
+    	
+        $('.bridgeStructure-a').removeAttr('style');
+        $("#right-container .bridgeStructure-a").parents('li').removeClass("active");
+        $(e.target).parents('li').addClass('active');
+        $('.nav-tabs-content').css('display', 'none');
+        var id = $(e.target).attr("data-device");
+        $("#device-img-" + id).css('display', 'block');
+
+        /*点击tab查图*/
+        queryDrawingData.monitorId = $('#jsYhBridge .active a').attr('id');
+        queryDrawingData.monitorType = $(this).attr('data-type');
+        YhHttp.init(YhHttpConstant.ServiceKey.QUERY_DRAWING_BY_BRIDGE);
+        YhHttp.send(queryDrawingData, queryDrawingCallback);
+    });
+
+    $("li.active").mouseleave(function () {
+        $("li.active").children("a").css("background-color", "#555555");
+    });
+    $("li>a:focus").mouseleave(function () {
+        $("li>a:focus").css("background-color", "#555555");
+    });
+
+
+    var queryDrawingCallback = function (result) {
+        var resultObj = JSON.parse(result);
+        if (result != null && result != '') {
+            var d = resultObj.parameter.list;
+            $('.point').html('');
+            if (null == d) {
+                return 0;
+            }
+            if (d[0] != null || d[0] != undefined) {
+                var frontImg = '<img src="' + YhHttpConstant.picUrl.url + d[0].imageId + '" class="threeImg" id="' + d[0].id + '" />';
+                $('#frontView .viewPic').html(frontImg);
+                /* 查点 */
+                queryPointData.drawingId = $('#frontView .viewPic img').attr('id');
+                queryPointData.monitorType = $('.wraper-photo .active a').attr('data-type');
+                queryPoint(queryPointData, YhHttpConstant.ServiceKey.QUERY_POINT_BY_DRAWING, '#frontPoint');
+            } else {
+                $('#frontView .viewPic').html('<span class="text-center" style="display: block;padding: 5px 0 12px 0;">暂无视图</span>');
+            }
+
+            if (d[1] != null || d[1] != undefined) {
+                var sideImg = '<img src="' + YhHttpConstant.picUrl.url + d[1].imageId + '" class="threeImg" id="' + d[1].id + '" />';
+                $('#sideView .viewPic').html(sideImg);
+                /* 查点 */
+                queryPointData.drawingId = $('#sideView .viewPic img').attr('id');
+                queryPointData.monitorType = $('.wraper-photo .active a').attr('data-type');
+                queryPoint(queryPointData, YhHttpConstant.ServiceKey.QUERY_POINT_BY_DRAWING, '#sidePoint');
+            } else {
+                $('#sideView .viewPic').html('<span class="text-center" style="display: block;padding: 5px 0 12px 0;">暂无视图</span>');
+            }
+
+            if (d[2] != null || d[2] != undefined) {
+                var verticalImg = '<img src="' + YhHttpConstant.picUrl.url + d[2].imageId + '" class="threeImg" id="' + d[2].id + '" />';
+                $('#verticalView .viewPic').html(verticalImg);
+                /* 查点 */
+                queryPointData.drawingId = $('#verticalView .viewPic img').attr('id');
+                queryPointData.monitorType = $('.wraper-photo .active a').attr('data-type');
+                queryPoint(queryPointData, YhHttpConstant.ServiceKey.QUERY_POINT_BY_DRAWING, '#verticalPoint');
+            } else {
+                $('#verticalView .viewPic').html('<span class="text-center" style="display: block;padding: 5px 0 12px 0;">暂无视图</span>');
+            }
+
+        } else if (resultObj.resultcode != YhHttpConstant.ResultCode.SUCCESS) {
+            yhLayer.yhMsg(resultObj.message, 1, 1000);
+        } else {
+            yhLayer.yhMsg(tips.queryMsg, 0, 1000);
+        }
+    };
+    var statusJSONArr = [];
+    var statusJSON = {};
+    var queryPoint = function (queryParam, code, p) {
+        YhHttp.init(code);
+        YhHttp.send(queryParam, function (result) {
+            var resultObj = JSON.parse(result);
+            if (result != null && result != '') {
+                var d = resultObj.parameter.list;
+                if (d == null) {
+                    return 0;
+                }
+                var point = '';
+                if (d.length != 0) {
+                    for (var i = 0; i < d.length; i++) {
+                    	sensorByPoint.pointId = d[i].pointId;
+                    	
+                        point = '<a href="javascript:;" class="warningToolTip bridgePoint" data-toggle="popover" data-container="body" ' +
+                            'data-index="0" data-placement="top" data-point="'+ d[i].pointName +'"id="point-'+ d[i].pointId +'" data-id="'+ d[i].pointId +'" title="' + d[i].pointName + '" ' +
+                            'style="top:' + d[i].positionY + '%;left:' + d[i].positionX + '%;"></a>';
+                        $(p).append(point);
+                        
+                        var content = '<ul class="list-group sensorContent" id="yhPop-'+ d[i].pointId +'"></ul>';
+                        $('#point-' + d[i].pointId).attr('data-content', content);
+                    }
+                }
+                $("[data-toggle='popover']").popover({html : true });
+            } else if (resultObj.resultcode != YhHttpConstant.ResultCode.SUCCESS) {
+                yhLayer.yhMsg(resultObj.message, 1, 1000);
+            } else {
+                yhLayer.yhMsg(tips.queryMsg, 0, 1000);
+            }
+        })
+    };
+    
+    /*push点的json*/
+    var push_point = function () {
+		if (null != timer) {
+            clear_interval(timer0);
+        }
+
+        timer0 = setInterval(refresh_queryPoint, 10000);  	
+    };
+    
+    var drawIdList = [];
+    var refresh_queryPoint = function(){
+    	/*加载需要查询的drawId  LIST*/
+    	drawIdList = [];
+    	$('.threeImg').each(function(){
+    		var drawId = $(this).attr('id');
+    		drawIdList.push(drawId);
+    	});
+    	
+    	queryPointData.monitorType = $('.wraper-photo .active a').attr('data-type');
+    	if(drawIdList.length != 0){
+    		YhHttp.init(YhHttpConstant.ServiceKey.QUERY_POINT_BY_DRAWING);
+    		
+    		for(var i = 0; i < drawIdList.length; i++){
+    			queryPointData.drawingId = drawIdList[i];
+    			refresh_point_callback(queryPointData);
+    		}
+    	}
+    };
+    
+    var refresh_point_callback = function(queryPointData){
+    	YhHttp.send(queryPointData, function (result){
+    		var resultObj = JSON.parse(result);
+    		if(result != null && result != ''){
+    			var d = resultObj.parameter.list;
+                if (d == null) {
+                    return 0;
+                }
+                var point = '';
+                if (d.length != 0) {
+                    for (var i = 0; i < d.length; i++) {
+                        statusJSON[d[i].pointId] = d[i].pointStatus;
+                    }
+                    console.log(statusJSON);
+                }
+    		} else if (resultObj.resultcode != YhHttpConstant.ResultCode.SUCCESS) {
+                yhLayer.yhMsg(resultObj.message, 1, 1000);
+            } else {
+                yhLayer.yhMsg(tips.queryMsg, 0, 1000);
+            }
+    		
+    	});
+    };
+    
+    var sensorByPoint = {
+    	pointId: '',
+    	monitorType: ''
+    }
+    var e = window.event;
+    $('.picWrap').on('click', '.bridgePoint', function(e){
+    	sensorByPoint.pointId = $(e.target).attr('data-id');
+    	sensorByPoint.monitorType = $('.wraper-photo .active a').attr('data-type');
+    	querySensorByPoint(sensorByPoint, e);
+    });
+    
+    var querySensorByPoint = function(param, e){
+    	YhHttp.init(YhHttpConstant.ServiceKey.QUERY_SENSOR_INFO_BY_POINT);
+    	YhHttp.send(param, function(result){
+    		var resultObj = JSON.parse(result);
+    		if(result != null && result != ''){
+    			var d = resultObj.parameter.list
+    			if(d == null){
+    				return 0;
+    			}
+    			var liCount = '';
+    			var sensor = '';
+    			
+    			$(e.target).html('');
+    			if(d.length != 0){
+					for(var i = 0; i < d.length; i++){
+						sensor = '<li class="list-group-item pull-left">'+
+								'<a href="realData.html?' + d[i].sensorId + '&' + d[i].dataType + '" data-index="0" class="warningToolTip" data-toggle="tooltip" data-placement="top" title="'+ d[i].sensorName +'"-"' + d[i].status + '"></a>'+
+								'</li>';
+						
+						console.log(param.pointId);
+						liCount = liCount + sensor;
+					}
+					
+					$('#yhPop-' + param.pointId).html(liCount);
+    			} else {
+    				liCount = resultObj.message;
+    				$('#yhPop-' + param.pointId).html(liCount);
+    			}
+    			
+    			$("[data-toggle='tooltip']").tooltip();
+    		} else if(resultObj.resultcode != YhHttpConstant.ResultCode.SUCCESS){
+    			yhLayer.yhMsg(resultObj.message, 1, 1000);
+    		} else {
+    			yhLayer.yhMsg('查询失败，请稍后再试...', 0, 1000);
+    		}
+    	});
+    };
+    
+    /*闪点*/
+    var set_point_color_switch = function () {
+
+        if (null != timer) {
+            clear_interval(timer);
+        }
+
+        timer = setInterval(changeColor, 1000);
+    };
+
+    var clear_interval = function (t) {
+        clearInterval(t);
+    };
+
+    var changeColor = function () {
+        change_topic_color("#frontPoint");
+        change_topic_color("#sidePoint");
+        change_topic_color("#verticalPoint");
+    };
+
+    var change_topic_color = function (topic) {
+        $(topic + " a").each(function(){
+            var ac = $(this).attr('data-index');
+            var id = $(this).attr('data-id');
+            if (ac == '1') {
+                if (statusJSON[id] == '01') {
+                    $(this).css('background-color', '#ff0000');
+                } else {
+                	$(this).css('background-color', '#89D53D');
+                }
+                $(this).attr('data-index', '0');
+            } else if (ac == '0') {
+                $(this).css('background-color', '#000');
+                $(this).attr('data-index', '1');
+            }
+        });
+    };
+
+    var querySensorByCondition = function(queryParam, code){
+        YhHttp.init(code);
+        YhHttp.send(queryParam, querySensorByConditionCallback);
+    };
+
+    var querySensorByConditionCallback = function(result){
+        var resultObj = JSON.parse(result);
+        if(result != null && result != ''){
+            var d = resultObj.parameter.list;
+
+            if(d == '' || d == null){
+                $('.sensorStatus').html('正常');
+                $('.sensorCount').html('0');
+                return 0;
+            }
+
+            var total = 0;
+            for(var i=0; i<d.length; i++){
+                var di = d[i].moniotrType;
+                var st = '';
+
+                if(di == '00'){
+                    $('#dt-00 .sensorCount').html(d[i].count);
+                    $('#dt-00 .sensorStatus').html(d[i].status);
+                } else if(di == '04'){
+                    $('#dt-04 .sensorCount').html(d[i].count);
+                    $('#dt-04 .sensorStatus').html(d[i].status);
+                }
+            }
+
+            yhPage.formatter();
+
+        } else if(resultObj.resultcode != YhHttpConstant.ResultCode.SUCCESS){
+            yhLayer.yhMsg(resultObj.message, 1, 1000);
+        } else {
+            yhLayer.yhMsg(tips.queryMsg, 0, 1000);
+        }
+    };
+
+    /* 左侧导航栏 */
+    $('#jsYhBridge').on('click', '.bridge-a', function (e) {
+        $('#jsYhBridge .bridge-a').parents('li').removeClass('active');
+        $('.bridge-a').removeAttr('style');
+        $(e.target).parents('li').addClass('active');
+
+        $('#myBridge').html($('#jsYhBridge .active .span-bridge').text());
+
+        queryAndCountSensor.monitorId = $(this).attr('id');
+        /*查询传感器状态*/
+        querySensorByCondition(queryAndCountSensor, YhHttpConstant.ServiceKey.LIST_SENSOR_BY_CONDITION);
+
+        /*点击桥查图*/
+        queryDrawingData.monitorId = $(this).attr('id');
+        queryDrawingData.monitorType = $('.wraper-photo .active a').attr('data-type');
+        YhHttp.init(YhHttpConstant.ServiceKey.QUERY_DRAWING_BY_BRIDGE);
+        YhHttp.send(queryDrawingData, queryDrawingCallback);
+    });
+</script>
+</html>

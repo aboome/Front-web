@@ -1,0 +1,165 @@
+/** {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}*/
+a:hover, a:link {
+    text-decoration: none;
+}
+
+body {
+    font-family: "Microsoft YaHei";
+}
+i{
+	font-style: normal;
+}
+.row,.col-xs-2,.col-xs-10,.col-xs-6{
+   margin: 0px;
+    padding: 0px;
+}
+
+[v-cloak] {
+  display: none;
+}
+
+#yhPagination{
+	text-align: right;
+}
+
+.yh-layer{
+	padding-top: 20px;
+	padding-left: 20px;
+	padding-right: 50px;
+}
+.layui-layer-btn{
+	text-align: center !important;
+}
+.layui-layer-btn a{
+	padding: 0 30px !important;
+	height: 32px !important;
+	line-height: 32px !important;
+}
+.delete-text{
+	font-size: 14px;
+	text-align: center;
+	padding-left: 40px;	
+}
+
+.icon {
+    color: #A8A8A8;
+    position: absolute;
+}
+
+/* 滚动条样式 */
+::-webkit-scrollbar{
+    width: 0px;
+    height: 8px;
+}
+::-webkit-scrollbar-track-piece{
+    background: #fff;
+    -webkit-border-radius: 6px;
+}
+::-webkit-scrollbar-thumb:vertical{
+    background-color: #DCDCDC;
+    -webkit-border-radius: 6px;
+}
+::-webkit-scrollbar-thumb:horizontal{
+    background-color: #DCDCDC;
+    -webkit-border-radius: 6px;
+}
+
+
+/* 表单 */
+.table-wrapper{
+    border: solid 1px #E3E3E3;
+}
+.table-wrapper .table-wrapper-head{
+    background-color: #F2F2F2;
+    height: 35px;
+    line-height: 35px;
+    padding: 0 10px;
+}
+.table-wrapper-head .table-title{
+    float: left;
+    height: 35px;
+    line-height: 35px;
+    font-weight: bold;
+}
+.table-wrapper-head .title-btn{
+    float: right;
+    background-color: #D14541;
+    color: #fff;
+    margin-top: 4px;
+    padding: 2px 12px;
+}
+.table-wrapper .selector{
+    padding-top:15px;
+}
+.table-wrapper .selector .form-group{
+    margin-left: 10px;
+    margin-right: 10px;
+    margin-bottom: 15px;
+    width: 180px;
+}
+.table-wrapper .selector .form-group:last-child{
+    width: auto;
+}
+.table-wrapper .selector .form-group .form-control{
+    width: 100%;
+}
+.table-wrapper .selector .form-group .btn-black{
+    background: #3B3B3B;
+    color: #fff;
+    padding: 6px 30px;
+}
+
+/*密码重置样式*/
+table button.btn-black.btn.reset{
+    padding: 1px 4px;
+    background: #feaf7e;
+    color: white;
+    font-size: 10px;
+    margin-left: 8px;
+    margin-top: -3px;
+
+}
+
+.caret{
+	position: absolute;
+	right: 10px;
+	top: 25px;
+}
+
+.normalStatus,.total{
+	color: #46abe8 !important;
+}
+
+.warnStatus{
+	color: #FF3A31 !important;
+}
+
+.normalStatusBg, .card{
+	background: #46abe8;
+}
+.warnStatusBg{
+	background: #ee9f76;
+}
+
+/*提示样式*/
+label.error{
+    color: red;
+}
+/*下拉框样式*/
+select.option{
+    padding: 5px;
+    margin-left: 5px;
+    margin-top: 5px;
+}
+
+#userName .caret{
+	right: 5px;
+	top: 22px;
+}
+.none{
+    display: none;
+}

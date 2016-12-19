@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0"/>
+    <title>桥梁信息监测平台-传感器配置管理</title>
+    <link rel="stylesheet" href="third/bootstrap-3.5/css/bootstrap.min.css"/>
+    <link href="third/IconFont/iconfont.css" rel="stylesheet">
+    <!--<link href="third/layui/css/layui.css" rel="stylesheet">-->
+    <link href="css/reset.css" rel="stylesheet"/>
+    <link href="css/app.css" rel="stylesheet"/>
+    <link href="css/page.css" rel="stylesheet"/>
+    <link href="css/navbar.css" rel="stylesheet"/>
+    <link href="css/systemManage.css" rel="stylesheet"/>
+</head>
+<body>
+<div class="top-nav">
+    <div class="logo">
+        <a href="#">
+            <img src="images/logo-w.png">
+        </a>
+    </div>
+
+    <!-- 顶部导航开始 -->
+    <div class="menu-body">
+
+    </div>
+</div>
+<!-- 顶部导航结束 -->
+
+<!-- 左侧导航栏开始 -->
+<div class="left-menu-opr" id="left-menu-opr-js">
+    <a class="left-menu-btn"></a>
+</div>
+<div class="left-menu" id="sysLeftMenu">
+    
+</div>
+<!-- 左侧导航栏结束 -->
+
+<!-- 右侧内容开始 -->
+<div class="right-container" id="right-container">
+    <div class="table-wrapper">
+        <div class="table-wrapper-head">
+            <h2 class="table-title">传感器配置管理</h2>
+
+        </div>
+        <div class="selector">
+            <form class="form-inline" role="form" id="queryForm" onsubmit="return false">
+                <div class="form-group">
+                    <label class="sr-only" for="sensorName">传感器名称</label>
+                    <input type="text" class="form-control" id="sensorName" name="sensorName" placeholder="请输入传感器名称" value="">
+                </div>
+                <!--<div class="form-group">
+                    <label class="sr-only" for="query-select">传感器类型</label>
+                    <select class="form-control" id="query-select">
+                        <option value="">选择传感器类型</option>
+                        <option v-cloak v-for="item of items" value="{{ item.key }}">{{ item.value }}</option>
+                    </select>
+                </div>-->
+                <div class="form-group">
+                    <label class="sr-only" for="sensorStatus">传感器状态</label>
+                    <select class="form-control" id="sensorStatus">
+                        <option value="">选择传感器状态</option>
+                        <option value="00">开</option>
+                        <option value="01">关</option>
+                        <option value="02">故障</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="sr-only" for="bridgeName">桥梁名称</label>
+                    <select class="form-control" id="bridgeName">
+                        <option value="">选择桥梁名称</option>
+                        <option v-cloak v-for=" item of items" value="{{ item.key }}">{{ item.value }}</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <button type="button" class="btn btn-black" id="search">查询</button>
+                </div>
+            </form>
+        </div>
+    
+        <table class="table table-striped" >
+            <thead>
+	            <tr>
+	                <th>传感器名称</th>
+	                <th>状态</th>
+	                <th>传感器规格型号</th>
+	                <th>安装位置</th>
+	                <th>桥梁名称</th>
+	                <th>最近校准时间</th>
+	            </tr>
+            </thead>
+            <tbody id="yh-grid">
+
+            </tbody>
+        </table>
+        <div id="pagination-container" class="m-pagination"></div>
+    </div>
+
+</div>
+<!-- 右侧内容结束 -->
+<!-- 版权区 -->
+<div class="">
+
+</div>
+
+<script type="text/template" id="yh-grid-template">
+    <tr></tr>
+    {@each list as it,index}
+    <tr>
+        <td>${ it.sensorName }</td>
+        <td class="status">${ it.status }</td>
+        <td>${ it.sensorModel }</td>
+        <td>${ it.remark }</td>
+        <td>${ it.monitorName }</td>
+        <td>${ (new Date(it.recentUpdateTime)).Format("yyyy-MM-dd hh:mm:ss") }</td>
+    </tr>
+    {@/each}
+</script>
+<script src="third/jquery-2.12.js"></script>
+<script src="third/jquery.cookie.min.js"></script>
+<script src="third/jquery.validate.js"></script>
+<script src="js/yhjs/yhValidate.js"></script>
+<script src="third/juicer-min.js"></script>
+<script src="third/vue.js"></script>
+<script src="third/pagination.min.js"></script>
+<script src="third/bootstrap-3.5/js/bootstrap.min.js"></script>
+<script src="third/layer/layer.js"></script>
+<script src="third/dateFormat.js"></script>
+<script src="js/yhjs/yhConstant.js" ></script>
+<script src="js/yhjs/yhGo.js" ></script>
+<script type="text/javascript" src="js/yhjs/yhMenu.js" ></script>
+<script type="text/javascript" src="js/yhjs/yhSelect.js" ></script>
+<script src="js/yhjs/yhPage.js" ></script>
+<script src="js/yhjs/yhLayer.js" ></script>
+<script src="third/yhPagination.js"></script>
+<script src="js/app.js"></script>
+<script>
+
+    $(function(){
+
+    	yhMenu.init('', YhHttpConstant.ServiceKey.LIST_MENU_INFO, 6, 7);
+
+    	yhSelect.init("#bridgeName", YhHttpConstant.yhSelect.bridge_select);
+
+        queryData.page.currentPage = 1;
+        queryData.page.pageSize = 10;
+        queryData.sensorName = '';
+        queryData.status = '';
+        queryData.monitorId = '';
+        
+        yhPage.queryTable(queryData, YhHttpConstant.ServiceKey.LIST_SENSOR_INFO_BY_PAGE);
+    });
+
+    var queryData = {
+        page: {
+            currentPage: '',
+            pageSize: ''
+        },
+        sensorName: '',
+        dataType: '',
+        status: '',
+        monitorId: ''
+    };
+
+    /*条件查询*/
+    $('#search').on('click',function(){
+        if($('#queryForm').valid()){
+            queryData.page.currentPage = 1;
+            queryData.page.pageSize = 10;
+            queryData.sensorName =  $('#sensorName').val();
+            queryData.status = $('#sensorStatus').val();
+            queryData.monitorId = $('#bridgeName').val();
+
+            yhPage.queryTable(queryData, YhHttpConstant.ServiceKey.LIST_SENSOR_INFO_BY_PAGE);
+        }
+
+    });
+
+    var pageEventHandler = function (pageSizes, pageNum) {
+
+        queryData.sensorName =  $('#sensorName').val();
+        queryData.status = $('#sensorStatus').val();
+        queryData.monitorId = $('#bridgeName').val();
+
+        if (pageSizes == null || pageSizes == "") {
+            queryData.page.pageSize = 10;
+        } else {
+            queryData.page.pageSize = pageSizes;
+        }
+
+        if (pageNum == null || pageNum == "") {
+            queryData.page.currentPage = 1;
+        } else {
+            queryData.page.currentPage = pageNum;
+        }
+
+        yhPage.queryTable(queryData, YhHttpConstant.ServiceKey.LIST_SENSOR_INFO_BY_PAGE);
+    };
+
+</script>
+</body>
+</html>

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0"/>
+    <title>桥梁信息监测平台-登录</title>
+    <link rel="stylesheet" href="third/bootstrap-3.5/css/bootstrap.min.css"/>
+    <link href="third/IconFont/iconfont.css" rel="stylesheet">
+    <link href="css/reset.css" rel="stylesheet"/>
+    <link href="css/app.css" rel="stylesheet"/>
+    <link href="css/login.css" rel="stylesheet"/>
+</head>
+<body>
+<div class="top-nav">
+    <div class="logo">
+        <a href="#">
+            <img src="images/logo.png">
+        </a>
+    </div>
+</div>
+<div class="wrap">
+    <div class="bg">
+        <img src="images/bg.png">
+
+        <div class="contentText">
+            <p><span class="p-color">多桥梁</span>监管服务</p>
+
+            <ul class="clearfix">
+                <li><p class="sysInfo">方便快捷</p></li>
+                <li><p class="sysInfo">多桥监管</p></li>
+                <li><p class="sysInfo">实时数据</p></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="loginMsg">
+
+        <form role="form" class="form-horizontal" id="loginInfo">
+            <div class="form-group loginInput">
+                <i class="icon iconfont icon-zhanghao"></i>
+                <input type="text" class="form-control" id="username" name="username" placeholder="请输入用户名">
+            </div>
+            <div class="form-group loginInput">
+                <i class="icon iconfont icon-mima"></i>
+                <input type="password" class="form-control" id="password" name="password" placeholder="请输入密码">
+            </div>
+
+            <div class="form-group">
+                <a type="button" id="login" class="btn btn-block xz-btn-bg">登录</a>
+            </div>
+            <div class="form-group">
+                <p class="forgetPsw"><a href="javascript:;" id="forgetPsw">忘记密码？</a></p>
+            </div>
+        </form>
+
+    </div>
+</div>
+
+<div class="footer">
+    <p>
+    	版权所有：桥梁在线监测Copyright&copy;2008 - 2016 All Rights Reserved V0.0.1
+    </p>
+</div>
+
+<div class="none" id="forgetPswInfo">
+	<p class="tips">请联系管理员：</p>
+	<p class="phone">025-88888888</p>
+</div>
+<script src="third/jquery-2.12.js"></script>
+<script src="third/jquery.cookie.min.js"></script>
+<script src="js/yhjs/yhConstant.js" ></script>
+<script src="js/yhjs/yhGo.js" ></script>
+<script src="js/yhjs/yhLayer.js" ></script>
+<script src="third/layer/layer.js"></script>
+<script src="third/md5.js" ></script>
+<script src="third/jquery.validate.js"></script>
+<script src="js/yhjs/yhValidate.js"></script>
+<script src="js/login.js"></script>
+</body>
+</html>

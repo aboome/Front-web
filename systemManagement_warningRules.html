@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0"/>
+    <title>桥梁信息监测平台-预警规则管理</title>
+    <link rel="stylesheet" href="third/bootstrap-3.5/css/bootstrap.min.css"/>
+    <link href="third/IconFont/iconfont.css" rel="stylesheet">
+    <link href="css/reset.css" rel="stylesheet"/>
+    <link href="css/app.css" rel="stylesheet"/>
+    <link href="css/navbar.css" rel="stylesheet"/>
+	<link href="css/page.css" rel="stylesheet">
+    <link href="css/systemManage.css" rel="stylesheet"/>
+</head>
+<body>
+<div class="top-nav">
+    <div class="logo">
+        <a href="#">
+            <img src="images/logo-w.png">
+        </a>
+    </div>
+
+    <!-- 顶部导航开始 -->
+    <div class="menu-body">
+
+    </div>
+</div>
+<!-- 顶部导航结束 -->
+
+<!-- 左侧导航栏开始 -->
+<div class="left-menu-opr" id="left-menu-opr-js">
+    <a class="left-menu-btn"></a>
+</div>
+<div class="left-menu" id="sysLeftMenu">
+    
+</div>
+<!-- 左侧导航栏结束 -->
+
+<!-- 右侧内容开始 -->
+<div class="right-container" id="right-container">
+    <div class="table-wrapper" >
+        <div class="table-wrapper-head">
+            <h2 class="table-title">预警规则管理</h2>
+        </div>
+        <div class="selector">
+            <form class="form-inline" role="form" id="queryForm" onsubmit="return false">
+				<div class="form-group">
+                    <label class="sr-only" for="bridgeName">桥梁名称</label>
+                    <select class="form-control" id="bridgeName">
+                        <option value="">请选择桥梁名称</option>
+						<option v-cloak v-for="item of items" value="{{ item.key }}">{{ item.value }}</option>
+                    </select>
+                </div>
+				<div class="form-group">
+                    <button type="button" class="btn btn-black" id="search">查询</button>
+                    <button type="button" class="btn btn-black" id="add">新增</button>
+                </div>
+            </form>
+        </div>
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>监测物</th>
+                <th>规则</th>
+                <th>规则状态</th>
+                <th>隐患监测时间</th>
+                <th>隐患次数</th>
+                <th>操作</th>
+            </tr>
+            </thead>
+            <tbody id="yh-grid">
+
+            </tbody>
+        </table>
+		<div id="pagination-container" class="m-pagination"></div>
+    </div>
+	
+	<!-- 新增弹出层 -->
+	<div id="addLayer" class="yh-layer none">
+		<form class="form-horizontal" id="addForm">
+			<div class="form-group">
+				<label for="add-monitorId" class="col-xs-4 control-label">桥梁名称</label>
+				<div class="col-xs-8">
+					<select class="form-control yh-addInput" name="monitorId" data-addKey="monitorId" id="add-monitorId">
+						<option value="">请选择桥梁名称</option>
+						<option v-cloak v-for="item of items" value="{{ item.key }}">{{ item.value }}</option>
+					</select>
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="add-ruleType" class="col-xs-4 control-label">规则</label>
+				<div class="col-xs-8">
+					<select class="form-control yh-addInput" name="ruleType" data-addKey="ruleType" id="add-ruleType">
+						<option value="">请选择规则</option>
+						<option value="00">规则一</option>
+						<option value="01">规则二</option>
+					</select>
+				</div>
+			</div>
+			<div class="form-group yh-relative">
+				<label for="add-timeRange" class="col-xs-4 control-label">监测时间</label>
+				<div class="col-xs-8">
+					<input type="text" class="form-control yh-addInput" data-addKey="timeRange" id="add-timeRange"  name="timeRange" placeholder="请输入监测时间"/>
+				</div>
+				<label for="add-timeRange" class="control-label addTime">秒</label>
+			</div>
+			<div class="form-group">
+				<label for="add-warningCount" class="col-xs-4 control-label">隐患次数</label>
+				<div class="col-xs-8">
+					<input type="text" class="form-control yh-addInput" data-addKey="warningCount" id="add-warningCount"  name="warningCount" placeholder="请输入隐患次数"/>
+				</div>
+			</div>
+		</form>
+	</div>
+	<!-- 修改弹出层 -->
+	<div id="modifyLayer" class="yh-layer none">
+		<form class="form-horizontal" id="modifyForm">
+			<div class="form-group">
+				<label for="m-monitorId" class="col-xs-4 control-label">桥梁名称</label>
+				<div class="col-xs-8">
+					<input type="text" class="form-control" id="m-monitorId"  name="monitorId" readonly="readonly"/>
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="m-ruleType" class="col-xs-4 control-label">规则</label>
+				<div class="col-xs-8">
+					<input type="text" class="form-control" id="m-ruleType"  name="ruleType" readonly="readonly"/>
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="m-status" class="col-xs-4 control-label">规则状态</label>
+				<div class="col-xs-8">
+					<select class="form-control yh-input" name="status" data-key="status" id="m-status">
+						<option value="">请选择规则状态</option>
+						<option value="00">打开</option>
+						<option value="01">关闭</option>
+					</select>
+				</div>
+			</div>
+			<div class="form-group yh-relative">
+				<label for="m-timeRange" class="col-xs-4 control-label">监测时间</label>
+				<div class="col-xs-8">
+					<input type="text" class="form-control yh-input" data-key="timeRange" id="m-timeRange"  name="timeRange" placeholder="请输入监测时间"/>
+				</div>
+				<label for="m-timeRange" class="control-label addTime">秒</label>
+			</div>
+			<div class="form-group">
+				<label for="m-warningCount" class="col-xs-4 control-label">隐患次数</label>
+				<div class="col-xs-8">
+					<input type="text" class="form-control yh-input" data-key="warningCount" id="m-warningCount"  name="warningCount" placeholder="请输入隐患次数"/>
+				</div>
+			</div>
+			<div class="form-group none">
+				<label for="m-id" class="col-xs-4 control-label">ID</label>
+				<div class="col-xs-8">
+					<input type="text" class="form-control yh-input" data-key="id" id="m-id"  name="id" />
+				</div>
+			</div>
+		</form>
+	</div>
+	<!-- 删除弹出层 -->
+	<div id="deleteLayer" class="yh-layer none">
+		<p class="delete-text">您确定要删除该条数据吗？</p>
+	</div>
+</div>
+<!-- 右侧内容结束 -->
+
+<script type="text/template" id="yh-grid-template">
+	<tr></tr>
+	{@each list as it,index}
+	<tr>
+		<td>${ it.monitorName }</td>
+		<td class="warnRule">${ it.ruleType }</td>
+		<td class="warnSetStatus">${ it.status }</td>
+		<td>${ it.timeRangeStr } 秒</td>
+		<td>${ it.warningCount }</td>
+		<td><a href="javascript:;"
+			   data-id="${ it.id }"
+			   data-monitorName="${ it.monitorName }"
+			   data-rule="${ it.ruleType }"
+			   data-status="${ it.status }"
+			   data-time="${ it.timeRangeStr }"
+			   data-count="${ it.warningCount }"
+			   class="td-a modify">修改</a>
+			<a href="javascript:;"
+			   data-id="${ it.id }"
+			   class="td-a delete">删除</a>
+		</td>
+	</tr>
+	{@/each}
+</script>
+<script src="third/jquery-2.12.js"></script>
+<script src="third/jquery.cookie.min.js"></script>
+<script src="third/jquery.validate.js"></script>
+<script src="js/yhjs/yhValidate.js"></script>
+<script src="third/juicer-min.js"></script>
+<script src="third/vue.js"></script>
+<script src="third/pagination.min.js"></script>
+<!--<script src="third/layui/layui.js"></script>-->
+<script src="third/bootstrap-3.5/js/bootstrap.min.js"></script>
+<script src="third/layer/layer.js"></script>
+<script src="third/dateFormat.js" ></script>
+<script src="js/yhjs/yhConstant.js" ></script>
+<script src="js/yhjs/yhGo.js" ></script>
+<script type="text/javascript" src="js/yhjs/yhMenu.js" ></script>
+<script src="js/yhjs/yhPage.js" ></script>
+<script type="text/javascript" src="js/yhjs/yhSelect.js" ></script>
+<script src="js/yhjs/yhLayer.js" ></script>
+<script src="js/app.js"></script>
+<script>
+    $(function(){
+    	yhMenu.init('', YhHttpConstant.ServiceKey.LIST_MENU_INFO, 6, 15);
+    	yhSelect.init('#bridgeName', YhHttpConstant.yhSelect.bridge_select);
+    	
+        queryData.page.currentPage = 1;
+        queryData.page.pageSize = 10;
+        queryData.monitorId = '';
+
+        yhPage.queryTable(queryData, YhHttpConstant.ServiceKey.LIST_WARN_RULE_SET);
+    });
+
+    var queryData = {
+        page: {
+            currentPage: '',
+            pageSize: ''
+        },
+        monitorId:''
+    };
+    
+	/*条件查询*/
+	$('#search').on('click',function(){
+		if($('#queryForm').valid()){
+			queryData.page.currentPage = 1;
+			queryData.page.pageSize = 10;
+			queryData.monitorId =  $('#bridgeName').val();;
+
+			yhPage.queryTable(queryData, YhHttpConstant.ServiceKey.LIST_WARN_RULE_SET);
+		}
+	});
+	
+    $('#add').on('click', function(){
+    	yhSelect.init('#add-monitorId', YhHttpConstant.yhSelect.bridge_select);
+		yhPage.addLayer('预警规则', YhHttpConstant.ServiceKey.ADD_WARN_RULE_SET, null);
+    });
+    
+    $('#yh-grid').on('click', '.modify', function(){
+    	
+    	$('#m-id').val($(this).attr('data-id'));
+    	$('#m-monitorId').val($(this).attr('data-monitorName'));
+    	$('#m-ruleType').val($(this).parents('tr').find('.warnRule').text());
+
+		$('#m-timeRange').val($(this).attr('data-time'));
+    	$('#m-warningCount').val($(this).attr('data-count'));
+    	
+    	var dataStatus = $(this).attr('data-status');
+    	slectedText('#m-status', dataStatus);
+    	modifySelectedMId = $(this).attr('data-monitorId');
+    	
+    	yhPage.modifyLayer('预警规则', YhHttpConstant.ServiceKey.UPDATE_WARN_RULE_SET, null);
+    });
+
+	var deleteData = {
+		warningRuleId: ''
+	}
+    $('#yh-grid').on('click', '.delete', function(){
+    	deleteData.warningRuleId = $(this).attr('data-id');
+    	
+    	yhPage.deleteLayer('预警规则', deleteData, YhHttpConstant.ServiceKey.DELETE_WARN_RULE_SET);
+    });
+
+    var afterSelectProcess = function(id) {
+        if(id == "#m-monitorId") {
+            slectedText('#m-monitorId', modifySelectedMId);
+		}
+	};
+
+	var pageEventHandler = function (pageSizes, pageNum) {
+
+        queryData.monitorId = $('#bridgeName').val();
+
+		if (pageSizes == null || pageSizes == "") {
+			queryData.page.pageSize = 10;
+		} else {
+			queryData.page.pageSize = pageSizes;
+		}
+
+		if (pageNum == null || pageNum == "") {
+			queryData.page.currentPage = 1;
+		} else {
+			queryData.page.currentPage = pageNum;
+		}
+
+		yhPage.queryTable(queryData, YhHttpConstant.ServiceKey.LIST_WARN_RULE_SET);
+	};
+
+</script>
+</body>
+</html>

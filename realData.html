@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0"/>
+    <title>桥梁信息监测平台-实时数据</title>
+    <link rel="stylesheet" href="third/IconFont/demo.css">
+    <link rel="stylesheet" href="third/IconFont/iconfont.css">
+    <link rel="stylesheet" href="third/bootstrap-3.5/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="css/app.css"/>
+    <link rel="stylesheet" href="css/headerFooterStyle.css"/>
+    <link rel="stylesheet" href="css/realData.css"/>
+
+</head>
+<body>
+<div class="top-nav">
+    <div class="logo">
+        <a href="#">
+            <img src="images/logo-w.png">
+        </a>
+    </div>
+
+    <!-- 顶部导航开始 -->
+    <div class="menu-body">
+
+    </div>
+</div>
+<!-- 顶部导航结束 -->
+
+<!-- 右侧边栏开始 -->
+<div class="left-menu-opr" id="left-menu-opr-js">
+    <a class="left-menu-btn"></a>
+</div>
+<div class="bridgeClassify left-menu" id="jsYhBridge">
+
+</div>
+<!-- 右侧边栏结束 -->
+<!-- 右侧内容开始 -->
+<div class="right-container" id="right-container">
+    <div class="warper-right" id="warper-right">
+        <!--<div class="query clearfix">
+            <button class="btn btn-default mybtn" >查询</button>
+            <select class="form-control" id="bridgeType">
+                <option>桥梁名称</option>
+                <option></option>
+            </select>
+        </div>-->
+        <div class="bridgeTitle">
+            <p><span>我的桥梁：</span>&nbsp;&nbsp;<span id="myBridge"></span></p>
+        </div>
+        <div class="row realDataCard">
+            <div id="04" class="col-xs-3">
+                <div class="card-1 ">
+                    <a class="active" href="javascript:;" >
+                        <div class="card-img"></div>
+                        <div>
+                            <p><i class="iconfont icon-shili"></i></p>
+                            <p><span>挠度监测</span></p>
+                        </div>
+                    </a>
+                </div>
+            </div>
+            <div id="00" class="col-xs-3">
+                <div class="card-1 ">
+                    <a href="javascript:;" >
+                        <div class="card-img"></div>
+                        <div>
+                            <p><i class="iconfont icon-shili"></i></p>
+                            <p><span>环境监测</span></p>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="monitorType">
+            <ul id="Child-Topic" class="nav nav-tabs myNav">
+                <!--<li><a href="javascript:;" data-type="1" class="realData-a active">混凝土表面应变</a></li>
+                <li><a href="javascript:;" data-type="2" class="realData-a">混凝土结构内部应变</a></li>
+                <li><a href="javascript:;" data-type="3" class="realData-a">钢筋受力</a></li>-->
+            </ul>
+        </div>
+        <div class="sensor" id="monitor-1" style="display: block;">
+
+            <div class="clearfix control-filterBtn">
+                <p class="allPosition">所有传感器位置：</p>
+                <button type="button" class="btn btn-default filterBtn toggleBtn" id="" data-toggle="1">
+                    展开筛选
+                </button>
+            </div>
+            <div class=" sensorPosition toggle-content row" id="toggle-content-1">
+            </div>
+
+            <!--<table class="table  table-hover current-val-table">
+                <thead>
+                <tr>
+                    <th>时间</th>
+                    <th>数值</th>
+                    <th>平均值</th>
+                    <th>单位</th>
+                    <th>状态</th>
+                </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>-->
+            <div class="row currentValue">
+                <div class="col-xs-6 sensorTime" >
+                    <p><span>当前时间:</span><span id="sensorTime"></span></p>
+                </div>
+                <div class="col-xs-6 sensorValue" >
+                    <p><span>当前值:</span><span id="sensorValue"></span></p>
+                </div>
+            </div>
+            <div class="chart-container">
+                <p class="current-val">实时数据：<span class="currentTime"></span></p>
+                <div id="container" style="min-width:400px;height:400px"></div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+<!-- 右侧内容结束 -->
+</body>
+<script src="third/jquery-2.12.js"></script>
+<script src="third/jquery.cookie.min.js" type="text/javascript"></script>
+<script src="third/bootstrap-3.5/js/bootstrap.min.js"></script>
+<script src="third/Highcharts-4.2.6/js/highcharts.js"></script>
+<script src="third/Highcharts-4.2.6/js/modules/exporting.js"></script>
+<script src="third/layer/layer.js"></script>
+<script src="third/dateFormat.js" ></script>
+<script src="js/yhjs/yhConstant.js"></script>
+<script src="js/yhjs/yhGo.js"></script>
+<script type="text/javascript" src="js/yhjs/yhMenu.js"></script>
+<script type="text/javascript" src="js/yhjs/yhMonitor.js"></script>
+<script src="js/yhjs/yhPage.js"></script>
+<script src="js/yhjs/yhLayer.js"></script>
+<script src="js/app.js"></script>
+<script type="text/javascript">
+    var e = window.event;
+    $(function () {
+        yhMenu.init('', YhHttpConstant.ServiceKey.LIST_MENU_INFO, 3, 0);
+        /* 初始化左侧桥梁*/
+        yhMonitor.init(initRightContainer);
+    });
+
+    var initRightContainer = function (monitorId) {
+
+        // 初始化右边title
+        if (null == getTopic()) {
+            $("#04").click();
+        } else {
+            $("#" + getTopic()).click();
+        }
+        var dataType = $('#Child-Topic .active').attr('data-type');
+        initSensorList(dataType);
+    };
+ /*主题(卡片)点击*/
+
+
+    $("#04").on('click',function () {
+        $('.realDataCard  a').removeClass('active');
+        $(this).find('a').addClass('active');
+        $("#Child-Topic").html("");
+        $("#Child-Topic").append('<li><a href="javascript:;" data-type="0205" class="realData-a active">挠度X</a></li>');
+        $("#Child-Topic").append('<li><a href="javascript:;" data-type="0206" class="realData-a">挠度Y</a></li>');
+        var dataType = $('#Child-Topic .active').attr('data-type');
+        initSensorList(dataType);
+    });
+
+    $("#00").on('click',function () {
+        $('.realDataCard  a').removeClass('active');
+        $(this).find('a').addClass('active');
+        $("#Child-Topic").html("");
+        $("#Child-Topic").append('<li><a href="javascript:;" data-type="0000" class="realData-a active">温度</a></li>');
+        /*$("#Child-Topic").append('<li><a href="javascript:;" data-type="0100" class="realData-a">风速</a></li>');
+        $("#Child-Topic").append('<li><a href="javascript:;" data-type="0101" class="realData-a">风压</a></li>');*/
+        var dataType = $('#Child-Topic .active').attr('data-type');
+        initSensorList(dataType);
+    });
+
+/*主题下类型(a标签)点击*/
+
+    $("#right-container").on('click', '.realData-a', function (e) {
+        $("#right-container a.realData-a").removeClass("active");
+        $(e.target).addClass("active");
+        /* 查询类型下传感器*/
+
+        var dataType = $(this).attr('data-type');
+        initSensorList(dataType);
+
+    });
+
+
+
+    /*根据主题查询传感器*/
+    var initSensorList = function (dataType) {
+        // 加载传感器列表
+        var querySensorListCon = {
+            monitorId: null,
+            dataType: null
+        };
+
+        querySensorListCon.dataType = dataType;
+        querySensorListCon.monitorId = $('#jsYhBridge .active .bridge-a').attr('id');
+
+        YhHttp.init(YhHttpConstant.ServiceKey.LIST_SENSOR_BY_TYPE);
+        YhHttp.send(querySensorListCon, function (result) {
+            var resultObj = JSON.parse(result);
+            // 渲染传感器列表
+            var sensorList = resultObj.parameter.list;
+
+            if (null == sensorList || sensorList == 'undefined') {
+                $("#toggle-content-1").html("无传感器");
+                layer.msg('无传感器无实时数据',{icon:0,time:1000});
+                $('#container').html('');
+                return 0;
+            }
+            var sensorHtml = '';
+
+
+            $("#toggle-content-1").html("");
+            for (var i = 0; i < sensorList.length; i++) {
+                sensorHtml = '<p class="col-sm-2 sensor-sel"><label><input type="radio" name="sensor" id="point-' + sensorList[i].sensorNumber + '" value="' + sensorList[i].sensorNumber + '"/> ' + sensorList[i].sensorName + '</label></p>';
+                $("#toggle-content-1").append(sensorHtml);
+            }
+
+            // 设置选中的传感器
+            var point = getPoint();
+
+            if (null == point) {
+                $('.sensorPosition').find("input:first").attr("checked", true);
+            } else {
+                $('.sensor-sel label').find("input[value=" + point + "]").attr("checked", true);
+            }
+            point = $('.sensor-sel label').find("input[type='radio']:checked").val();
+            loadHisRealData(dataType,point);
+        });
+        
+        var activeMonitor = $('#jsYhBridge .active .span-bridge').text();
+        $('#myBridge').html(activeMonitor);
+    };
+
+
+
+    /*存储图表的50个数据*/
+    var hisData = [];
+    var hisDataItem = {
+        sensorTime: null,
+        sensorValue: null
+    };
+
+    var loadHisRealData = function (dataType,point) {
+        hisData = [];
+        hisDataItem = {};
+        var listHisRealData = {
+            sensorNumber: null,
+            dataType: null,
+            size: null
+        };
+        listHisRealData.sensorNumber = point;
+        listHisRealData.dataType = dataType;
+        listHisRealData.size = '50';
+        YhHttp.init(YhHttpConstant.ServiceKey.LIST_REAL_DATA_BY_SENSOR_NO);
+        YhHttp.send(listHisRealData,loadHisRealDataCallBack);
+    };
+
+    var loadHisRealDataCallBack = function (result) {
+        var resultObj = JSON.parse(result);
+        if (resultObj.parameter.list != null && resultObj.parameter.list != 'undefined') {
+            var pointList = resultObj.parameter.list;
+            if (pointList.length != '0') {
+                for (var i = 0; i < pointList.length; i++) {
+                    hisDataItem = {};
+                    hisDataItem.sensorTime = pointList[i].sensorTime;
+                    hisDataItem.sensorValue = pointList[i].sensorValue;
+                    hisData.push(hisDataItem);
+                    if(pointList[i].sensorTime != ''){
+                        var time = new Date(pointList[i].sensorTime).Format('"yyyy-MM-dd hh:mm:ss"');
+                        $('#sensorTime').text(time);
+                        $('#sensorValue').text(pointList[i].sensorValue);
+                    }else {
+                        $('#sensorTime').text('');
+                        $('#sensorValue').text('');
+                    }
+
+                }
+                console.log(hisData);
+                /* 查出数据后初始化图表*/
+                initTableAndCharts();
+
+            }
+        } else {
+            hisDataItem.sensorTime = '';
+            hisDataItem.sensorValue = '';
+            hisData.push(hisDataItem);
+            $('#sensorTime').text('');
+            $('#sensorValue').text('');
+            $('#container').html('');
+            layer.msg('无实时数据',{icon:2,time:1000})
+        }
+
+
+    };
+
+
+    var initTableAndCharts = function () {
+        // 初始化列表 显示当前值+单位
+
+
+        // 初始化charts
+        var dataType = $('#Child-Topic .active').attr('data-type');
+
+        var title;
+        var unitTip;
+        var unit;
+        var seriesName;
+
+        title = '桥梁'+yhEnum.dataType[dataType].name;
+        unitTip = yhEnum.dataType[dataType].name+yhEnum.dataType[dataType].unit;
+        unit = yhEnum.dataType[dataType].unit;
+        seriesName = '桥梁结构';
+
+        var point = $('.sensor-sel label').find("input[type='radio']:checked").val();
+
+
+        yh_high_charts(title, unitTip, 110, -10, unit, seriesName, point, dataType, hisData);
+    };
+
+
+    var yh_high_charts = function (subtitle, unitTip, warnTop, warnBot, unit, seriesName, point, dataType, hisData) {
+
+        Highcharts.setOptions({
+            global: {
+                useUTC: false
+            }
+        });
+        $('#container').highcharts({
+            chart: {
+                type: 'spline',
+                animation: Highcharts.svg, // don't animate in old IE
+                marginRight: 10,
+                events: {
+                    load: function () {
+                        // set up the updating of the chart each second
+                        var series = this.series[0];
+                        setInterval(function () {
+                            var queryRealData = {
+                                sensorNumber: null,
+                                dataType:null
+                            };
+                            queryRealData.sensorNumber = point;
+                            queryRealData.dataType = dataType;
+                            YhHttp.init(YhHttpConstant.ServiceKey.QUERY_REAL_DATA_BY_SENSOR_NO);
+                            YhHttp.sendLongConnect(queryRealData, function (result) {
+                                var resultObj = JSON.parse(result);
+
+                                if (resultObj.parameter != null) {
+                                    var x = resultObj.parameter.sensorTime;
+                                    var y = resultObj.parameter.sensorValue;
+                                    series.addPoint([x, y], true, true);
+                                    if(x != ''){
+                                        var time = new Date(x).Format('"yyyy-MM-dd hh:mm:ss"');
+                                        $('#sensorTime').text(time);
+                                        $('#sensorValue').text(pointList[i].sensorValue);
+                                    }else {
+                                        $('#sensorTime').text('');
+                                        $('#sensorValue').text('');
+                                    }
+                                   
+                            }
+                            });
+                        }, 1000);
+                    }
+                }
+            },
+            title: {
+                text: '实时数据',
+                x: -20,
+                style: {"color": "#333333", "font-weight": "normal"}
+            },
+            subtitle: {
+                text: subtitle,
+                x: -20,
+                style: {
+                    "font-family": "微软雅黑"
+                }
+            },
+            xAxis: {
+                type: 'datetime',
+                tickPixelInterval: 60
+            },
+            yAxis: {
+                title: {
+                    text: unitTip
+                },
+                plotLines: [{
+                    value: warnTop,
+                    width: 2,
+                    color: '#FAC84C',
+                    zIndex: 1
+                }, {
+                    value: warnBot,
+                    width: 2,
+                    color: '#FAC84C',
+                    zIndex: 1
+                }]
+            },
+            credits: {
+                enabled: false // 禁用版权信息
+            },
+            tooltip: {
+                valueSuffix: unit,
+                formatter: function () {
+                    return '<b>' + this.series.name + '</b><br/>' +
+                        Highcharts.dateFormat('%Y-%m-%d %H:%M:%S', this.x) + '<br/>' +
+                        Highcharts.numberFormat(this.y, 2) + unit;
+                }
+            },
+            legend: {
+                enabled: false
+            },
+            exporting: {
+                enabled: false
+            },
+            series: [{
+                name: seriesName,
+                data: (function () {
+                    // generate an array of random data
+                    var data = [];
+                    for (var i = 0; i < hisData.length; i++) {
+                        data.push({
+                            x: hisData[hisData.length-i-1].sensorTime,
+                            y: hisData[hisData.length-i-1].sensorValue
+                        });
+                    }
+                    return data;
+                }())
+            }]
+        });
+    };
+
+    var querySensorPosition = {
+        monitorId: '',
+        dataType: ''
+    };
+    /*点击切换主题*/
+    $('.realDataCard  a').on('click', function () {
+       /* 加样式*/
+        $('.realDataCard  a').removeClass('active');
+        $(this).addClass('active');
+        querySensorPosition.dataType = $(this).attr('data-id');
+
+
+    });
+
+
+    /* 左侧导航栏 */
+    $('#jsYhBridge').on('click', '.bridge-a', function (e) {
+        $('#jsYhBridge .bridge-a').parents('li').removeClass('active');
+        $('.bridge-a').removeAttr('style');
+        $(e.target).parents('li').addClass('active');
+
+        $('#myBridge').html($('#jsYhBridge .active .span-bridge').text());
+
+
+        // 初始化右边title
+        if (null == getTopic()) {
+            $("#04").click();
+        } else {
+            $("#" + getTopic()).click();
+        }
+        /*initSensorList(dataType);*/
+
+    });
+
+    $('#toggle-content-1').on('click', '.sensor-sel label', function (e) {
+
+        // 获取对应radio的值
+        var point = $('.sensor-sel label').find("input[type='radio']:checked").val();
+
+        initTableAndCharts();
+    });
+
+    /* 收起删选*/
+    $("#right-container").on('click', '.toggleBtn', function (e) {
+        var id = $(e.target).attr("data-toggle");
+
+        var h = $("#toggle-content-" + id).height();
+        if (h > 33) {
+            $(".toggleBtn").html("展开筛选");
+            $("#toggle-content-" + id).css('height', '33px');
+
+        } else {
+            $("#toggle-content-" + id).css('height', 'auto');
+            $(".toggleBtn").html("收起筛选");
+        }
+    });
+
+
+    function clickControlId() {
+        var dh = $('.sensorPosition').outerHeight();
+        if (dh == '33') {
+            $('.sensorPosition').css('height', 'auto');
+        } else {
+            $('.sensorPosition').css('height', '33px');
+        }
+    };
+
+
+    $("li.active").mouseleave(function () {
+        $("li.active").children("a").css("background-color", "#555555");
+    });
+
+    $("li>a:focus").mouseleave(function () {
+        $("li>a:focus").css("background-color", "#555555");
+    });
+</script>
+</html>

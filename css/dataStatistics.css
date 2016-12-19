@@ -1,0 +1,130 @@
+/*月报报表card样式*/
+.totalName{
+    padding-bottom: 10px;
+}
+div.dataStatistics-card{
+    padding: 10px;
+}
+div.dataStatistics-card .col-xs-2{
+    border:1px solid #eeeeee;
+    text-align: center;
+    padding: 20px 0px;
+}
+
+div.dataStatistics-card .card-leftBorder-1{
+    border-left:2px solid #fd9e81;
+}
+div.dataStatistics-card .card-leftBorder-2{
+    border-left:2px solid #8381f1;
+}
+div.dataStatistics-card .card-leftBorder-3{
+    border-left:2px solid #6eccf8;
+}
+div.dataStatistics-card .card-leftBorder-4{
+     border-left:2px solid #b4fc91;
+ }
+
+div.dataStatistics-card .card-leftBorder-5{
+    border-left:2px solid #5ec0f9;
+}
+
+div.dataStatistics-card .card-leftBorder-6{
+    border-left:2px solid #f8a7e0;
+}
+
+div.dataStatistics-comparable {
+   padding: 10px ;
+    color: black;
+}
+
+
+div.dataStatistics-comparable .col-xs-3{
+    text-align: center;
+    height: 40px;
+    line-height: 40px;
+}
+div.dataStatistics-comparable .col-xs-3 a{
+    color: black;
+    display: inline-block;
+    height: 40px;
+    line-height: 40px;
+    width: 100%;
+}
+
+
+div.dataStatistics-comparable .background-active-00{
+    background: url("../images/dataComparable_left.png") no-repeat;
+    background-size: 100% 40px;
+
+}
+
+
+
+div.dataStatistics-comparable .background-00{
+    background: url("../images/dataComparble_left_1.png") no-repeat;
+    background-size: 100% 40px;
+}
+
+
+div.dataStatistics-comparable .background-active-01,div.dataStatistics-comparable .background-active-02{
+    background: url("../images/dataComparable_center_1.png") no-repeat;
+    background-size: 100% 40px;
+
+}
+
+div.dataStatistics-comparable .background-01,div.dataStatistics-comparable .background-02
+{
+    background: url("../images/dataComparable_center.png") no-repeat;
+    background-size: 100% ;
+
+}
+
+div.dataStatistics-comparable .background-03{
+    background: url("../images/dataComparable_right.png") no-repeat;
+    background-size: 100% ;
+}
+
+div.dataStatistics-comparable .background-active-03{
+    background: url("../images/dataComparable_right_1.png") no-repeat;
+    background-size: 100% ;
+}
+
+.compare-object{
+    border-bottom: 1px solid #dedede;
+    margin-right: 60px;
+    padding: 10px 40px 10px 10px ;
+}
+.compare-object button{
+    float: right;
+    margin-right: 20px;
+}
+
+.compare-object button.today{
+    background-color: #6bb72d;
+}
+
+.compare-object button.yesterday{
+    background-color: #44a9e7;
+}
+.compare-object button.close{
+    background-color: white;
+}
+.compare-object span{
+    color: #6cdada;
+}
+
+.monitorInfo{
+    padding: 10px;
+}
+
+.monitorInfo .position-left{
+    float: left;
+    margin-left: 10px;
+    text-align: center;
+}
+
+.monitorInfo .position-right{
+    float: right;
+    margin-right: 60px;
+    text-align: center;
+}

@@ -1,0 +1,92 @@
+.table-wrapper .table thead tr{
+    background: #F2F2F2;
+}
+.table-wrapper .table thead tr th{
+    text-align: center;
+}
+.table-wrapper .table tbody td{
+    vertical-align: middle;
+    text-align: center;
+}
+.table-wrapper .point-pic{
+    display: inline-block;
+    width: 25px;
+    height: 25px;
+}
+.table-wrapper .td-img{
+    width: 100%;
+}
+.table-wrapper .td-a{
+	margin: 0 5px;
+}
+
+.yh-show-layer{
+	padding: 16px;
+}
+
+.bridge{
+	width: 360px;
+	font-size: 15px;
+}
+.bridge p{
+	padding: 5px;
+}
+.bridge .col-xs-4{
+	text-align: right;
+}
+
+/*桥梁分组管理样式*/
+
+#bridgeTree{
+    top:2px;
+    width: 220px;
+}
+#bridgeTree a{
+    color: white;
+}
+#bridgeTree .menu-list li.chapter>a{
+    font-size: 15px;
+}
+#bridgeTree .bridge-list{
+    margin: 5px;
+}
+#bridgeTree .bridge-list li a{
+	display: block;
+    font-size: 14px;
+    padding: 10px 10px 10px 40px ;
+
+}
+#bridgeTree .bridge-list li:hover{
+    background: #464646;
+}
+
+#bridgeTree .menu-list>li.active>.bridge-list{
+    display: block;
+}
+#bridgeTree .menu-list>li>.bridge-list{
+    display: none;
+}
+
+/*菜单树样式*/
+.ztree *{
+    font-family:"Microsoft YaHei";
+    font-size: 16px !important;
+}
+.ztree li span.button.switch{
+    width: 20px;
+    height: 20px;
+}
+
+.checkbox input[type=checkbox], .checkbox-inline input[type=checkbox], .radio input[type=radio], .radio-inline input[type=radio]{
+	margin-top: 0;
+}
+
+.yh-relative{
+	position: relative;
+}
+
+.addTime{
+	position: absolute;
+	top: 4px;
+	right: 20px;
+}

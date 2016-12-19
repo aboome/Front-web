@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0" />
+    <title>桥梁信息监测平台-告警管理</title>
+    <link rel="stylesheet" href="third/IconFont/demo.css">
+	<link rel="stylesheet" href="third/IconFont/iconfont.css">
+	<link rel="stylesheet" href="third/bootstrap-3.5/css/bootstrap.min.css" />
+	<!--<link href="third/layui/css/layui.css" rel="stylesheet">-->
+    <link href="css/page.css" rel="stylesheet"/>
+	<link rel="stylesheet" href="css/app.css" />
+	<link rel="stylesheet" href="css/headerFooterStyle.css" />
+	<link rel="stylesheet" href="css/bridgeStruture.css" />
+</head>
+<body >
+<div class="top-nav">
+    <div class="logo">
+        <a href="#">
+            <img src="images/logo-w.png">
+        </a>
+    </div>
+
+    <!-- 顶部导航开始 -->
+    <div class="menu-body">
+
+    </div>
+</div>
+<!-- 顶部导航结束 -->
+<!-- 内容区开始 -->
+<!-- 内容区左侧导航栏开始 -->
+<div class="left-menu-opr" id="left-menu-opr-js">
+    <a class="left-menu-btn"></a>
+</div>
+<div class="bridgeClassify left-menu" id="jsYhBridge">
+
+</div>
+<!-- 内容区左侧导航栏结束 -->
+
+<!-- 内容区右侧内容开始 -->
+<div class="right-container"  id="right-container">
+    <div class="warper-right" id="warper-right">
+
+        <div class="bridgeTitle">
+            <p><span>我的桥梁：</span>&nbsp;&nbsp;<span id="myBridge"></span></p>
+        </div>
+        <div class="wraper-photo" >
+            <ul class="nav nav-tabs">
+                <li ><a href="warningManagement.html"  class="warning-a" data-id="0">传感器数据告警</a></li>
+                <li class="active"><a href="#"  class="warning-a" data-id="1">设备告警</a></li>
+                <li><a href="warningManage_sensorHidden.html"  class="warning-a" data-id="2">传感器隐患告警</a></li>
+                <li><a href="warningManage_equipmentHidden.html"  class="warning-a" data-id="3">设备隐患告警</a></li>
+            </ul>
+            <div class="nav-tabs-content" id="warning-type-1" >
+                <div >
+                    <form class="form-inline myForm" role="form">
+                        <div class="form-group">
+                            <select  class="form-control dataType" id="equipmentType">
+                                <option value="">选择设备类型</option>
+                                <option value="00">DTU设备</option>
+                                <option value="01">传感器设备</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <input class="Wdate form-control"  id="startTime1" type="text" onClick="WdatePicker()" placeholder="请选择开始时间" value="">
+                        </div>
+                        <div class="form-group">
+                            <input class="Wdate form-control" id="endTime1" type="text" onClick="WdatePicker()" placeholder="请选择结束时间" value="">
+                        </div>
+                        <div class="form-group">
+                            <button type="button" class="btn  btn-search mybtn query" id="search">查询</button>
+                        </div>
+                    </form>
+                    <table class="table  table-hover control-table" >
+                        <thead>
+                            <tr>
+                                <th>设备类型</th>
+                                <th>设备标识</th>
+                                <th>设备位置</th>
+                                <th>告警状态</th>
+                                <th>告警原因</th>
+                                <th>解决方案</th>
+                                <th>推送人</th>
+                                <th>告警生成时间</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody id="yh-equipmentWarning">
+
+                        </tbody>
+                    </table>
+                    <div id="pagination-container" class="m-pagination"></div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 内容区右侧内容结束 -->
+<!--修改弹出层-->
+<div id="modifyLayer" class="yh-layer none">
+    <form class="form-horizontal" id="modifyForm">
+        <div class="form-group none">
+            <input type="text" class="form-control yh-input" data-key="id" id="m-id" value="" />
+        </div>
+        <div class="form-group">
+            <label for="m-sensorNumber" class="col-xs-4 control-label">标识</label>
+            <div class="col-xs-8">
+                <input type="text" disabled class="form-control yh-input" data-key="equipmentNumber" id="m-sensorNumber" value="" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="m-warnDeals" class="col-xs-4 control-label">处理方法</label>
+            <div class="col-xs-8">
+                <input type="text" class="form-control yh-input" data-key="warnDeal" id="m-warnDeals" name="warnDeals" value="" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="m-person" class="col-xs-4 control-label">处理人</label>
+            <div class="col-xs-8">
+                <input type="text" class="form-control yh-input" data-key="person" id="m-person" name="person" value="" />
+            </div>
+        </div>
+
+    </form>
+
+</div>
+
+</body>
+
+<script type="text/template" id="yh-grid-template">
+    <tr></tr>
+    {@each list as it,index}
+    <tr><td class="equipmentType">${ it.equipmentType }</td>
+        <td>${ it.equipmentNumber }</td>
+        <td>${ it.orgName }</td>
+        <td class="warningStatus">${ it.status}</td>
+        <td>${ it.warnRemark }</td>
+        <td>${ it.warnDeal }</td>
+        <td>${ it.person }</td>
+        <td class="time">${ it.warnTime }</td>
+        <td><button type="button"  class=" btn btn-black reset"
+                    data-id="${ it.id}"
+                    data-number ="${ it.equipmentNumber }"
+                    data-status ="${ it.status }"
+                    data-Deals = "${ it.warnDeal }"
+                    data-person ="${ it.person }">处理
+        </button>
+        </td>
+
+    </tr>
+    {@/each}
+</script>
+<script src="third/jquery-2.12.js"></script>
+<script src="third/jquery.cookie.min.js"></script>
+<script src="third/jquery.validate.js"></script>
+<script src="js/yhjs/yhValidate.js"></script>
+<script src="third/juicer-min.js"></script>
+<script src="third/vue.js"></script>
+<!--<script src="third/layui/layui.js"></script>-->
+<script src="third/pagination.min.js"></script>
+<script src="third/bootstrap-3.5/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="third/My97DatePicker/WdatePicker.js"></script>
+<script src="third/layer/layer.js"></script>
+<script src="third/dateFormat.js"></script>
+<script src="js/yhjs/yhConstant.js" ></script>
+<script src="js/yhjs/yhGo.js"></script>
+<script type="text/javascript" src="js/yhjs/yhMenu.js" ></script>
+<script type="text/javascript" src="js/yhjs/yhMonitor.js" ></script>
+<script src="js/yhjs/yhPage.js"></script>
+<script type="text/javascript" src="js/yhjs/yhSelect.js" ></script>
+<script src="js/yhjs/yhLayer.js"></script>
+<script src="js/app.js"></script>
+<script type="text/javascript">
+
+    $(function(){
+        yhMenu.init('', YhHttpConstant.ServiceKey.LIST_MENU_INFO, 5, 0);
+        /* 初始化左侧桥梁*/
+        yhMonitor.init(initRightContainer);
+    });
+
+    var initRightContainer = function(monitorId) {
+        queryEquipment.page.currentPage = 1;
+        queryEquipment.page.pageSize = 10;
+        queryEquipment.monitorId = monitorId;
+        queryEquipment.startTime = '';
+        queryEquipment.endTime = '';
+        queryEquipment.equipmentType ='';
+        queryEquipment.warnLevel = '';
+
+        YhHttp.init(YhHttpConstant.ServiceKey.LIST_EQUIPMENT_WARNING_BY_PAGE);
+        YhHttp.send(queryEquipment,queryEquipmentWarningCallBack);
+
+        /*渲染下拉框传感器类型*/
+        yhSelect.init('#select-dataType', YhHttpConstant.yhSelect.sensor_type_select);
+        var activeMonitor = $('#jsYhBridge .active .span-bridge').text();
+        $('#myBridge').html(activeMonitor);
+    };
+
+    /*2，设备告警，隐患查询*/
+    var queryEquipment = {
+        monitorId:'',
+        startTime:'',
+        endTime:'',
+        equipmentType:'',
+        warnLevel:'',
+        page:{
+            currentPage: '',
+            pageSize: ''
+        }
+    };
+
+    var queryEquipmentWarningCallBack = function(result){
+        yhLayer.yhLoading();
+        var resultObj = JSON.parse(result);
+        if(result != null && result != ''){
+            yhLayer.yhCloseLoading();
+            if(resultObj.parameter.list.length != 0) {
+                var d = resultObj.parameter;
+                var page = resultObj.parameter.page;
+
+                $('#yh-equipmentWarning').html('');
+                var content =juicer($('#yh-grid-template').html(),d);
+                $('#yh-equipmentWarning').html(content);
+
+                var listCountArray = [];
+                for (var i=0;i<page.count;i++) {
+                    listCountArray.push(i);
+                }
+                /* 分页 */
+                yhPage.yhPagination(page.pageSize, page.currentPage, page.count, listCountArray, pageEventHandler);
+                btnStatus();
+                /* 分页 */
+                /*yhPage.yhPagination(page.pages, page.pageSize);*/
+            }else{
+                $('#yh-equipmentWarning').html('暂无数据');
+            }
+
+        } else if(resultObj.resultcode != YhHttpConstant.ResultCode.SUCCESS) {
+            yhLayer.yhMsg(resultObj.message, 1, 1000);
+        } else {
+            yhLayer.yhMsg(tips.queryMsg, 0, 1000);
+        }
+    };
+
+
+    /* 条件查询*/
+    $("#search").on('click',function(){
+        queryEquipment.page.currentPage = 1;
+        queryEquipment.page.pageSize = 10;
+        queryEquipment.monitorId = '1';
+        queryEquipment.startTime = $("input#startTime1").val();
+        queryEquipment.endTime = $("input#endTime1").val();
+        queryEquipment.equipmentType =$("#equipmenyType").val();
+        queryEquipment.warnLevel ='';
+
+        YhHttp.init(YhHttpConstant.ServiceKey.LIST_EQUIPMENT_WARNING_BY_PAGE);
+        YhHttp.send(queryEquipment,queryEquipmentWarningCallBack);
+    });
+
+
+
+    /* 修改弹出层*/
+    $("#yh-equipmentWarning").on('click','.reset',function(){
+        /*初始化弹出层*/
+        $("#m-id").val($(this).attr("data-id"));
+        $("#m-sensorNumber").val($(this).attr("data-number"));
+        $("#m-status").val($(this).attr("data-status"));
+        $("#m-warnDeals").val($(this).attr("data-Deals"));
+        $("#m-person").val($(this).attr("data-person"));
+
+
+        yhPage.modifyLayer('处理状态',YhHttpConstant.ServiceKey.UPDATE_EQUIPMENT_WARNING_BY_PAGE,null);
+    });
+
+
+    /*tab切换*/
+    e = window.event;
+    $("#right-container").on("click",".warning-a", function(e){
+        $("#right-container .wraper-photo ul li").removeClass("active");
+        $(e.target).parents("li").addClass("active");
+        var id = $(e.target).attr("data-id");
+        $(".nav-tabs-content").css('display','none');
+        $("#warning-type-"+id).css('display','block');
+
+    });
+
+    /*已处理按钮禁用*/
+    var btnStatus = function(){
+        $("table button.reset").each(function(){
+            if($(this).attr("data-status") == "00")
+            {
+                $(this).attr('disabled',true);
+                $(this).html('已处理');
+                $(this).css('background','#555555');
+            }else{
+                $(this).attr("disabled",false);
+                $(this).html('请处理');
+                $(this).css('background','#feaf7e');
+            }
+        })
+    };
+
+    var pageEventHandler = function (pageSizes, pageNum) {
+
+        queryEquipment.monitorId = $('.sidebar-menu .active a').attr('id');
+        queryEquipment.startTime = $('#startTime1').val();
+        queryEquipment.endTime = $('#endTime1').val();
+        queryEquipment.dataType = $('#equipmentType').val();
+        queryEquipment.warnLevel = '';
+
+        if (pageSizes == null || pageSizes == "") {
+            queryEquipment.page.pageSize = 10;
+        } else {
+            queryEquipment.page.pageSize = pageSizes;
+        }
+
+        if (pageNum == null || pageNum == "") {
+            queryEquipment.page.currentPage = 1;
+        } else {
+            queryEquipment.page.currentPage = pageNum;
+        }
+
+        YhHttp.init(YhHttpConstant.ServiceKey.LIST_EQUIPMENT_WARNING_BY_PAGE);
+        YhHttp.send(queryEquipment,queryEquipmentWarningCallBack);
+    };
+
+    /* 左侧导航栏 */
+    $('#jsYhBridge').on('click', '.bridge-a', function (e) {
+        $('#jsYhBridge .bridge-a').parents('li').removeClass('active');
+        $('.bridge-a').removeAttr('style');
+        $(e.target).parents('li').addClass('active');
+
+        $('#myBridge').html($('#jsYhBridge .active .span-bridge').text());
+
+
+        queryEquipment.page.currentPage = 1;
+        queryEquipment.page.pageSize = 10;
+        queryEquipment.monitorId = $(this).attr('id');
+        queryEquipment.startTime = '';
+        queryEquipment.endTime = '';
+        queryEquipment.equipmentType ='';
+        queryEquipment.warnLevel = '';
+
+        YhHttp.init(YhHttpConstant.ServiceKey.LIST_EQUIPMENT_WARNING_BY_PAGE);
+        YhHttp.send(queryEquipment,queryEquipmentWarningCallBack);
+
+    });
+</script>
+</html>

@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+
+	<head>
+		<meta charset="UTF-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0" />
+		<title>桥梁信息监测平台-数据统计</title>
+		<link rel="stylesheet" href="third/IconFont/demo.css">
+		<link rel="stylesheet" href="third/IconFont/iconfont.css">
+		<link rel="stylesheet" href="third/bootstrap-3.5/css/bootstrap.min.css" />
+		<link rel="stylesheet" href="css/app.css" />
+		<link rel="stylesheet" href="css/headerFooterStyle.css" />
+		<link rel="stylesheet" href="css/dataStatistics.css" />
+		<link rel="stylesheet" href="css/page.css" />
+	</head>
+
+	<body>
+		<div class="top-nav">
+			<div class="logo">
+				<a href="#">
+					<img src="images/logo-w.png">
+				</a>
+			</div>
+
+			<!-- 顶部导航开始 -->
+			<div class="menu-body">
+
+			</div>
+		</div>
+		<!-- 顶部导航结束 -->
+		<!-- 右侧边栏开始 -->
+		<div class="left-menu-opr" id="left-menu-opr-js">
+			<a class="left-menu-btn"></a>
+		</div>
+		<div class="bridgeClassify left-menu" id="jsYhBridge">
+
+		</div>
+		<!-- 右侧边栏结束 -->
+		<!-- 右侧内容开始 -->
+		<div class="right-container" id="right-container">
+			<div class="warper-right" id="warper-right">
+				<div class="bridgeTitle">
+					<p><span>我的桥梁：</span>&nbsp;&nbsp;<span id="myBridge"></span></p>
+				</div>
+				<div class="wraper-photo">
+					<ul class="nav nav-tabs dataType">
+						<li>
+							<a href="dataStatistics.html" data-type="1" class="statistics-a">历史数据</a>
+						</li>
+						<li class="active">
+							<a href="#" data-type="2" class="statistics-a">月报报表</a>
+						</li>
+						<!--<li><a href="dataStatistics_compare.html" data-type="3" class="statistics-a">数据对比</a></li>-->
+					</ul>
+					<div class="nav-tabs-content" id="dataStatistics-2">
+						<div class="">
+							<form class="form-inline myForm" role="form" id="queryForm">
+								<div class="form-group">
+									<label class="control-label" for="startTime1">开始时间</label>
+									<input class="Wdate form-control" id="startTime1" type="text" onClick="WdatePicker()" placeholder="请选择开始时间">
+								</div>
+								<div class="form-group">
+									<label class="control-label" for="endTime1">结束时间</label>
+									<input class="Wdate form-control" id="endTime1" type="text" onClick="WdatePicker()" placeholder="请选择结束时间">
+								</div>
+								<div class="form-group">
+									<button type="button" class="btn btn-default btn-search mybtn" id="search">查询</button>
+								</div>
+							</form>
+						</div>
+						<table class="table  table-hover control-table">
+							<thead>
+								<tr>
+									<th>报表名称</th>
+									<th>状态</th>
+									<th>报表创建时间</th>
+									<th>操作</th>
+								</tr>
+							</thead>
+							<tbody id="yh-grid">
+
+							</tbody>
+						</table>
+						<div id="pagination-container" class="m-pagination"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- 右侧内容结束 -->
+		<script type="text/template" id="yh-grid-template">
+			<tr></tr>
+			{@each list as it,index}
+			<tr>
+				<td>${ it.formName }</td>
+				<td class="reportStatus">${ it.status }</td>
+				<td>${ (new Date(it.createTime)).Format("yyyy-MM-dd hh:mm:ss") }</td>
+				<td>
+					{@if it.status=='02'}
+					<a href="http://127.0.0.1:8080/monthReport/${ it.url }" 
+						class="td-a download" data-id="${ it.id }">
+						下载
+					</a>
+					{@else}
+					<span class="td-a">请等待生成报表...</span>
+					{@/if}
+				</td>
+			</tr>
+			{@/each}
+		</script>
+	</body>
+	<script src="third/jquery-2.12.js"></script>
+	<script src="third/vue.js"></script>
+	<script src="third/jquery.cookie.min.js"></script>
+	<script src="third/jquery.validate.js"></script>
+	<script src="js/yhjs/yhValidate.js"></script>
+	<script type="text/javascript" src="third/juicer-min.js" ></script>
+	<script src="third/bootstrap-3.5/js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="third/My97DatePicker/WdatePicker.js"></script>
+	<script src="third/layer/layer.js"></script>
+	<script src="third/dateFormat.js"></script>
+	<script src="js/yhjs/yhConstant.js"></script>
+	<script src="js/yhjs/yhGo.js"></script>
+	<script type="text/javascript" src="js/yhjs/yhMenu.js"></script>
+	<script src="third/pagination.min.js"></script>
+	<script src="js/yhjs/yhPage.js"></script>
+	<script src="js/yhjs/yhLayer.js"></script>
+	<script src="js/yhjs/yhSelect.js"></script>
+	<script type="text/javascript" src="js/yhjs/yhMonitor.js"></script>
+	<script src="js/app.js"></script>
+	<script type="text/javascript">
+		$(function() {
+			yhMenu.init('', YhHttpConstant.ServiceKey.LIST_MENU_INFO, 4, 0);
+			/* 初始化左侧桥梁*/
+			yhMonitor.init(initRightContainer);
+		});
+		var queryData = {
+			monitorId: '',
+			startTime: '',
+			endTime: '',
+			page: {
+	            currentPage: '',
+	            pageSize: ''
+	        }
+		};
+		var e = window.event;
+
+		var initRightContainer = function(monitorId) {
+			queryData.page.currentPage = 1;
+			queryData.page.pageSize = 10;
+			queryData.monitorId = $('#jsYhBridge .active a').attr('id');
+			
+			yhPage.queryTable(queryData, YhHttpConstant.ServiceKey.LIST_MONTH_REPORT);
+			
+			var activeMonitor = $('#jsYhBridge .active .span-bridge').text();
+        	$('#myBridge').html(activeMonitor);
+		};
+		
+		/* 条件查询*/
+	    $('#search').on('click',function(){
+	        if($('#queryForm').valid()){
+	            queryData.page.currentPage = 1;
+				queryData.page.pageSize = 10;
+				queryData.monitorId = $('#jsYhBridge .active a').attr('id');
+				
+				queryData.startTime = $('#startTime1').val() + ' 00:00:00';
+				queryData.endTime = $('#endTime1').val() + ' 00:00:00';
+				
+	            yhPage.queryTable(queryData, YhHttpConstant.ServiceKey.LIST_MONTH_REPORT);
+	        }
+	    });
+
+		/* 左侧导航栏 */
+		$('#jsYhBridge').on('click', '.bridge-a', function(e) {
+			$('#jsYhBridge .bridge-a').parents('li').removeClass('active');
+			$('.bridge-a').removeAttr('style');
+			$(e.target).parents('li').addClass('active');
+
+			$('#myBridge').html($('#jsYhBridge .active .span-bridge').text());
+
+			// 初始化右边title
+			if(null == getTopic()) {
+				$("#04").click();
+			} else {
+				$("#" + getTopic()).click();
+			}
+			
+			queryData.page.currentPage = 1;
+			queryData.page.pageSize = 10;
+			queryData.monitorId = $(this).attr('id');
+			yhPage.queryTable(queryData, YhHttpConstant.ServiceKey.LIST_MONTH_REPORT);
+		});
+		
+		var pageEventHandler = function (pageSizes, pageNum) {
+
+	        queryData.monitorId = $('#jsYhBridge .active a').attr('id');
+	
+	        if (pageSizes == null || pageSizes == "") {
+	            queryData.page.pageSize = 10;
+	        } else {
+	            queryData.page.pageSize = pageSizes;
+	        }
+	
+	        if (pageNum == null || pageNum == "") {
+	            queryData.page.currentPage = 1;
+	        } else {
+	            queryData.page.currentPage = pageNum;
+	        }
+	
+	        yhPage.queryTable(queryData, YhHttpConstant.ServiceKey.LIST_MONTH_REPORT);
+	    };
+	</script>
+
+</html>

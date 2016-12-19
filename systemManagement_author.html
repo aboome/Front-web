@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+	<head>
+		<meta charset="UTF-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0" />
+		<title>桥梁信息监测平台-权限管理</title>
+		<link rel="stylesheet" href="third/bootstrap-3.5/css/bootstrap.min.css" />
+		<link href="third/IconFont/iconfont.css" rel="stylesheet">
+		<!--<link href="third/layui/css/layui.css" rel="stylesheet">-->
+		<link href="css/reset.css" rel="stylesheet" />
+		<link href="css/app.css" rel="stylesheet" />
+		<link href="css/page.css" rel="stylesheet" />
+		<link href="css/navbar.css" rel="stylesheet" />
+		<link href="css/systemManage.css" rel="stylesheet" />
+		<link href="third/zTree_v3/css/zTreeStyle/zTreeStyle.css" rel="stylesheet" />
+	</head>
+
+	<body>
+		<div class="top-nav">
+			<div class="logo">
+				<a href="#">
+					<img src="images/logo-w.png">
+				</a>
+			</div>
+
+			<!-- 顶部导航开始 -->
+			<div class="menu-body">
+
+			</div>
+		</div>
+		<!-- 顶部导航结束 -->
+
+		<!-- 左侧导航栏开始 -->
+		<div class="left-menu-opr" id="left-menu-opr-js">
+			<a class="left-menu-btn"></a>
+		</div>
+		<div class="left-menu" id="sysLeftMenu">
+
+		</div>
+		<!-- 左侧导航栏结束 -->
+
+		<!-- 右侧内容开始 -->
+		<div class="right-container" id="right-container">
+			<div class="table-wrapper">
+				<div class="table-wrapper-head">
+					<h2 class="table-title">权限管理</h2>
+
+				</div>
+				<div class="selector">
+					<form class="form-inline" role="form" id="queryForm" onsubmit="return false">
+						<div class="form-group">
+							<label class="sr-only" for="roleName">角色名称</label>
+							<input type="text" class="form-control" id="roleName" name='roleName' placeholder="请输入角色名" value="">
+						</div>
+						<div class="form-group">
+							<button type="button" class="btn btn-black" id="search">查询</button>
+
+						</div>
+					</form>
+				</div>
+				<table class="table table-striped">
+					<thead>
+						<tr>
+							<th>角色</th>
+							<th>创建时间</th>
+							<th>操作</th>
+						</tr>
+					</thead>
+					<tbody id="yh-grid">
+
+					</tbody>
+				</table>
+				<div id="pagination-container" class="m-pagination"></div>
+
+				<!-- 修改弹出层 -->
+				<div id="modifyLayer" class="none yh-layer">
+					<form class="form-horizontal" id="modifyForm">
+						<div class="form-group">
+							<label for="m-roleName" class="col-xs-4 control-label">角色名称</label>
+							<div class="col-xs-8">
+								<input type="text" class="form-control yh-input" data-key="roleId" id="m-roleName" placeholder="" disabled="disabled" />
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="m-menuIds" class="col-xs-4 control-label">权限名称</label>
+							<div class="col-xs-8">
+								<select class="form-control yh-input" data-key="menuIds" id="m-menuIds" multiple>
+									<option>1</option>
+									<option>2</option>
+
+								</select>
+							</div>
+						</div>
+
+					</form>
+				</div>
+				<!--删除角色-->
+				<div id="deleteLayer" class="yh-layer none">
+					<p class="delete-text">您确定要删除该条数据吗？</p>
+				</div>
+
+			</div>
+		</div>
+		<!-- 查看详情弹出层 -->
+		<div id="roleMenuLayer" class="yh-layer none">
+			<!-- <table class="table table-striped">
+			        <thead>
+			        <tr>
+			            <th>序号</th>
+			            <th>已绑定菜单</th>
+			            <th>创建时间</th>
+			        </tr>
+			        </thead>
+			        <tbody>
+			        <tr v-cloak v-for="item of menuitems">
+			            <td>{{ $index+1 }}</td>
+			            <td>{{ item.menuName }}</td>
+			            <td>{{ item.createTime }}</td>
+			        </tr>
+			    </table> -->
+			
+						<!-- 菜单树-->
+						<!--<div id="menuLayer" class="yh-layer none">
+			        <div id = "treeDemo" class="ztree">
+			
+			        </div>
+			    </div>-->
+		</div>
+		<div id="menuDetailLayer" class="yh-layer none">
+			<p id="menuInfo"></p>
+			<div id="menuTree" class="ztree">
+
+			</div>
+		</div>
+		<!-- 菜单树-->
+		<div id="menuLayer" class="yh-layer none">
+			<div id="treeDemo" class="ztree">
+
+			</div>
+		</div>
+
+		<!-- 右侧内容结束 -->
+		<!-- 版权区 -->
+		<div class="">
+
+		</div>
+		<script type="text/template" id="yh-grid-template">
+			<tr></tr>
+			{@each list as it,index}
+			<tr>
+
+				<td>${ it.roleName }</td>
+				<td>${ (new Date(it.createTime)).Format("yyyy-MM-dd hh:mm:ss") }</td>
+				<td>
+					<a href="javascript:;" class="td-a modify" data-menuName="${ it.menuName }" data-roleName="${ it.roleName }" data-roleId="${ it.id }">修改权限
+					</a>
+					<a href="javascript:;" class="td-a delete" data-id="${ it.id }">删除权限
+					</a>
+				</td>
+
+			</tr>
+			{@/each}
+		</script>
+		<script src="third/jquery-2.12.js"></script>
+		<script src="third/jquery.cookie.min.js"></script>
+		<script src="third/jquery.validate.js"></script>
+		<script src="js/yhjs/yhValidate.js"></script>
+		<script src="third/juicer-min.js"></script>
+		<script src="third/vue.js"></script>
+		<!--<script src="third/layui/layui.js"></script>-->
+		<script src="third/pagination.min.js"></script>
+		<script src="third/bootstrap-3.5/js/bootstrap.min.js"></script>
+		<script src="third/zTree_v3/js/jquery.ztree.core.min.js"></script>
+		<script src="third/zTree_v3/js/jquery.ztree.excheck.min.js"></script>
+		<script src="third/layer/layer.js"></script>
+		<script src="third/dateFormat.js"></script>
+		<script src="js/yhjs/yhConstant.js"></script>
+		<script src="js/yhjs/yhGo.js"></script>
+		<script type="text/javascript" src="js/yhjs/yhMenu.js"></script>
+		<script src="js/yhjs/yhPage.js"></script>
+		<script src="js/yhjs/yhLayer.js"></script>
+		<script src="js/yhjs/yhTree.js"></script>
+		<script src="js/app.js"></script>
+		<script>
+			var queryData = {
+				page: {
+					currentPage: '',
+					pageSize: ''
+				},
+
+				managerId: '',
+				roleName: ''
+
+			};
+
+			var queryDetails = {
+				roleId: ''
+			};
+			var queryMenu = {
+				page: {
+					currentPage: '',
+					pageSize: ''
+				},
+				menuLevel: '',
+				userId: '',
+				parentId: '',
+				status: ''
+			};
+			var deleteData = {
+				id: ''
+			};
+			var modifyData = {
+				roleId: '',
+				menuIds: []
+			};
+			$(function() {
+
+				yhMenu.init('', YhHttpConstant.ServiceKey.LIST_MENU_INFO, 6, 12);
+
+				queryData.page.currentPage = 1;
+				queryData.page.pageSize = 10;
+				queryData.managerId = $.cookie("userName");
+				queryData.roleName = '';
+
+				yhPage.queryTable(queryData, YhHttpConstant.ServiceKey.QUERY_ROLE_INFO);
+			});
+
+			/*条件查询*/
+			$("#search").on('click', function() {
+				if($('#queryForm').valid()) {
+					queryData.page.currentPage = 1;
+					queryData.page.pageSize = 10;
+					queryData.managerId = $.cookie("userName");
+					queryData.roleName = $("#roleName").val();
+					yhPage.queryTable(queryData, YhHttpConstant.ServiceKey.QUERY_ROLE_INFO);
+				}
+			});
+
+			/* 修改权限 角色绑定菜单*/
+			$("#yh-grid").on('click', '.modify', function() {
+				/*1,查出所有菜单*/
+				queryDetails.roleId = $(this).attr('data-roleId');
+				updateRoleMenu(queryDetails, YhHttpConstant.ServiceKey.QUERY_AUTHOR_INFO, $(this).attr('data-roleId'));
+
+				/* 2,选中角色下已选中的菜单*/
+				modifyData.id = $(this).attr("data-roleId");
+				/*初始化弹出层*/
+				$("#m-roleName").val($(this).attr("data-roleName"));
+			});
+
+			/*删除权限*/
+			$("#yh-grid").on('click', '.delete', function() {
+				deleteData.id = $(this).attr("data-id");
+				yhPage.deleteLayer('权限', deleteData, YhHttpConstant.ServiceKey.DELETE_AUTHOR_INFO);
+			});
+
+			var pageEventHandler = function(pageSizes, pageNum) {
+
+				queryData.managerId = $.cookie("userName");
+					queryData.roleName = $("#roleName").val();
+
+				if(pageSizes == null || pageSizes == "") {
+					queryData.page.pageSize = 10;
+				} else {
+					queryData.page.pageSize = pageSizes;
+				}
+
+				if(pageNum == null || pageNum == "") {
+					queryData.page.currentPage = 1;
+				} else {
+					queryData.page.currentPage = pageNum;
+				}
+
+				yhPage.queryTable(queryData, YhHttpConstant.ServiceKey.QUERY_ROLE_INFO);
+			};
+
+			/*绑定菜单*/
+			var roleMenuInfo = {
+				roleId: '',
+				menuIds: []
+			};
+			var updateRoleMenu = function(msg, servicekey, id) {
+				roleMenuInfo.roleId = id;
+				YhHttp.init(servicekey);
+				YhHttp.send(msg, function(result) {
+					var resultObj = JSON.parse(result);
+					var menuList = resultObj.parameter.list;
+
+					for(var i = 0; i < menuList.length; i++) {
+
+						menuList[i].pId = menuList[i].parentId;
+
+					}
+					// 初始化权限树
+					initZTree('treeDemo', setting, menuList);
+				});
+
+				layer.open({
+					type: 1,
+					title: "修改权限菜单",
+					area: ['250px', '400px'],
+					shadeClose: false,
+					content: $('#menuLayer'),
+					btn: ["确定", "取消"],
+					yes: function(index, layero) {
+
+						yhLayer.yhLoading();
+
+						var checkedNodes = zTree.getCheckedNodes(true);
+						var menuIdList = [];
+						roleMenuInfo.menuIds = [];
+
+						for(var i = 0; i < checkedNodes.length; i++) {
+							roleMenuInfo.menuIds.push(checkedNodes[i].id);
+						}
+
+						yhLayer.yhLoading();
+						YhHttp.init(YhHttpConstant.ServiceKey.UPDATE_AUTHOR_INFO);
+						YhHttp.send(roleMenuInfo, function(result) {
+							var resultObj = JSON.parse(result);
+							yhLayer.yhCloseLoading();
+							if(resultObj.resultcode == '0000') {
+								layer.msg(resultObj.parameter.message, {
+									icon: 1,
+									time: 1000
+								})
+								layer.close(index);
+							} else {
+								layer.msg(resultObj.parameter.message, {
+									icon: 2,
+									time: 1000
+								})
+							}
+						});
+
+					},
+					no: function() {
+						layer.msg('关闭修改权限', {
+							time: 2000, //1s后自动关闭
+							btn: ['知道了']
+						})
+					}
+				});
+			};
+		</script>
+	</body>
+
+</html>

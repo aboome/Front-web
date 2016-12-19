@@ -1,0 +1,161 @@
+.top {
+    width: 100%;
+    min-width: 1200px;
+    height: 45px;
+    padding: 0 30px;
+}
+
+.logo {
+    width: 207px;
+    height: 45px;
+    padding-top: 12px;
+}
+.logo img {
+    width: 100%;
+}
+
+.wrap {
+    position: relative;
+    overflow: hidden;
+    min-width: 1200px;
+}
+
+.wrap .bg {
+    height: 900px;
+    z-index: 0;
+    position: relative;
+}
+
+.wrap .bg img {
+    width: 100%;
+    height: 100%;
+    position: relative;
+margin-top: -60px;
+}
+
+.contentText {
+    color: #333;
+    letter-spacing: 1.5px;
+    font-size: 32px;
+    position: absolute;
+    top: 46.6%;
+    left: 18.9%;
+}
+
+@media screen and (min-width: 1580px) {
+    .contentText {
+        left: 22%;
+    }
+}
+
+.contentText .p-color {
+    color: #FAA600;
+}
+
+.contentText ul {
+    margin-top: 60px;
+    margin-left: -50px;
+}
+
+.contentText ul li {
+    float: left;
+    padding: 0 8px;
+}
+
+.sysInfo {
+    color: #fff;
+    font-size: 22px;
+}
+
+.loginMsg {
+    position: absolute;
+    top:160px;
+    right:160px;
+    width: 300px;
+    border-radius: 4px;
+    background-color: rgb(255, 255, 255);
+    padding: 40px 30px 25px 30px;
+}
+.form-horizontal .form-group{
+    margin-left: 0;
+    margin-right: 0;
+}
+
+.form-control {
+    height: 36px;
+    font-family: "Microsoft YaHei";
+    font-size: 12px;
+}
+
+.btn {
+    margin-top: 20px;
+    font-family: "Microsoft YaHei";
+}
+
+.xz-btn-bg {
+    background-color: #FAA600;
+    font-size: 16px;
+    color: #ffffff;
+}
+
+.xz-btn-bg:hover, .xz-btn-bg:link {
+    color: #ffffff;
+}
+
+.forgetPsw {
+    text-align: center;
+}
+
+.forgetPsw a {
+    color: #a1a1a1;
+}
+
+.col-xs-8 {
+    padding-left: 0;
+}
+
+.loginInput {
+    position: relative;
+}
+
+.icon {
+    font-size: 24px;
+    top: 7px;
+    left: 8px;
+}
+
+.loginInput .form-control {
+    padding: 6px 35px;
+}
+
+.footer {
+   	/*padding: 10px 0;*/
+	/*border: 1px solid black;*/
+	width: 100%;
+
+}
+
+@media (max-width: 1200px) {
+    .footer{
+        width: 1200px;
+    }
+}
+
+.footer p{
+    text-align: center;
+}
+
+.tips, .phone{
+	text-align: center;
+	font-size: 18px;
+	font-family: "微软雅黑";
+	padding-top: 25px;
+}
+.phone{
+	font-size: 24px;
+	color: #FF2F2F;
+}
+label.error{
+    margin-left: 10px;
+    margin-top: 5px;
+}
